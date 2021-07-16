@@ -61,14 +61,15 @@ class main_screen():
 
         #submit button to accept the file
 
+        self.submit_frame = tk.Frame(self.master, highlightcolor="#99aab5", bd=10)
+        self.submit_frame.place(relwidth=0.175, relheight=0.85, rely=0.075, relx=0.8)
+
         self.submit_pic = tk.PhotoImage(file='./images/submit_pic.png')
         self.submit_pic_new = self.submit_pic.subsample(2, 2)
-        self.submit_pic_label = tk.Label(self.master, image=self.submit_pic_new)
-        self.submit_pic_label.place(relwidth=0.175, relheight=0.85, rely=0.075, relx=0.8) #1366/768 = 1.7786, so I set height to 
-                                                                                        #this so that it'd be proportional to width.
-        self.submit_pic_button = tk.Button(self.master, image=self.submit_pic_new, bd=5
-        )#command=lambda:
-        self.submit_pic_button.place(relwidth=0.175, relheight=0.85, rely=0.075, relx=0.8) 
+
+        self.submit_pic_button = tk.Button(self.submit_frame, image=self.submit_pic_new, bd=5
+        , bg="white")#command=lambda:
+        self.submit_pic_button.place(relx=0, relheight=1, relwidth=1) 
 
 if __name__ == '__main__':
     main()
