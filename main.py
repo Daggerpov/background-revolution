@@ -32,6 +32,8 @@ def retrieve_file():
     )
     )
 
+    
+
 class main_screen():
     def __init__(self, master):
         #these properties will mostly stay constant throughout all windows
@@ -71,7 +73,7 @@ class main_screen():
         #button for file explorer
         #I only want its command to run once, when it's clicked so I made a 
         #simple lambda that invokes the info_display function
-        self.button = tk.Button(self.weather_frame, text="Web Scrape", font=('Courier', 24), bg='white', 
+        self.button = tk.Button(self.weather_frame, text="Select Image in File Explorer", font=('Courier', 40), bg='white', 
         command=lambda:retrieve_file())
         self.button.place(relx=0, relheight=1, relwidth=1)
 
