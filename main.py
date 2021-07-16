@@ -1,27 +1,36 @@
 import tkinter as tk
-from tkinter import ttk
-import os
-import subprocess
+from tkinter import ttk, filedialog
 
 HEIGHT = 768
 WIDTH = 1366
-fileExplorerPath = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
+
 
 def main():
     #initializing module
+    global root
     root = tk.Tk()
     
-    #setting the current screen to start menu
+    # #setting the current screen to start menu
     app = main_screen(root)
     
-    #overall GUI loop which will run constantly, accepting input and such
+    # #overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
 
-    #Open the file explorer
-    path = os.path.normpath(fileExplorerPath)
-
-    #This opens the file explorer
-    subprocess.run([fileExplorerPath, path])
+def retrieve_file():
+    root.filename = filedialog.askopenfilename(initialdir='/', title='Select an Image File', filetypes=(
+        ("compatible image files", "*.png"), 
+        ("compatible image files", "*.jpeg"), 
+        ("compatible image files", "*.jpg"),
+        ("compatible image files", "*.gif"),
+        ("compatible image files", "*.tiff"),
+        ("compatible image files", "*.psd"),
+        ("compatible image files", "*.pdf"),
+        ("compatible image files", "*.eps"),
+        ("compatible image files", "*.ai"),
+        ("compatible image files", "*.indd"),
+        ("compatible image files", "*.raw")
+    )
+    )
 
 
 class PlaceholderEntry(ttk.Entry):
@@ -70,9 +79,9 @@ class main_screen():
         self.master.resizable(width=False, height=False)
 
         
-        #making the style of this window compatible with my custom entry class
-        self.style = ttk.Style(self.master)
-        self.style.configure("Placeholder.TEntry", foreground="#d5d5d5")
+        # #making the style of this window compatible with my custom entry class
+        # self.style = ttk.Style(self.master)
+        # self.style.configure("Placeholder.TEntry", foreground="#d5d5d5")
         
 
         #fitting the entry and button for weather
@@ -111,7 +120,7 @@ class main_screen():
         #I only want its command to run once, when it's clicked so I made a 
         #simple lambda that invokes the info_display function
         self.button = tk.Button(self.weather_frame, text="Web Scrape", font=('Courier', 24), bg='white', 
-        ) #command=lambda:
+        command=lambda:retrieve_file())
         self.button.place(relx=0.7, relheight=1, relwidth=0.3)
 
 
