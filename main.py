@@ -1,8 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
+import os
+import subprocess
 
 HEIGHT = 768
 WIDTH = 1366
+fileExplorerPath = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
 
 def main():
     #initializing module
@@ -13,6 +16,12 @@ def main():
     
     #overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
+
+    #Open the file explorer
+    path = os.path.normpath(fileExplorerPath)
+
+    #This opens the file explorer
+    subprocess.run([fileExplorerPath, path])
 
 
 class PlaceholderEntry(ttk.Entry):
