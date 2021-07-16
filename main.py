@@ -16,20 +16,22 @@ def main():
     root.mainloop()
 
 def retrieve_file():
+    a = 'compatible image files'
     root.filename = filedialog.askopenfilename(initialdir='/', title='Select an Image File', filetypes=(
         ("compatible image files", "*.png"), 
-        ("compatible image files", "*.jpeg"), 
-        ("compatible image files", "*.jpg"),
-        ("compatible image files", "*.gif"),
-        ("compatible image files", "*.tiff"),
-        ("compatible image files", "*.psd"),
-        ("compatible image files", "*.pdf"),
-        ("compatible image files", "*.eps"),
-        ("compatible image files", "*.ai"),
-        ("compatible image files", "*.indd"),
-        ("compatible image files", "*.raw")
+        (a, "*.jpeg"), 
+        (a, "*.jpg"),
+        (a, "*.gif"),
+        (a, "*.tiff"),
+        (a, "*.psd"),
+        (a, "*.pdf"),
+        (a, "*.eps"),
+        (a, "*.ai"),
+        (a, "*.indd"),
+        (a, "*.raw")
     )
     )
+
 class main_screen():
     def __init__(self, master):
         #these properties will mostly stay constant throughout all windows
@@ -65,10 +67,6 @@ class main_screen():
 
         address2 = tk.Label(self.lower_frame, bg="#99aab5", font=('Courier', 24))
         address2.place(rely=0.825, relwidth=1, relheight=0.165)
-
-        #entry text box for user input
-        self.entry = PlaceholderEntry(self.weather_frame, "State Name", '', font=('Courier', 36))
-        self.entry.place(relwidth=0.65, relheight=1)
 
         #button for state entry
         #I only want its command to run once, when it's clicked so I made a 
