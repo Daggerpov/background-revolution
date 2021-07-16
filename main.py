@@ -42,7 +42,7 @@ class main_screen():
         self.master.config(bg = "#23272a")
         self.master.resizable(width=False, height=False)
 
-        #fitting the entry and button for weather
+        #fitting the button for opening the file explorer
         self.weather_frame = tk.Frame(self.master, bg="#99aab5", bd=5)
         self.weather_frame.place(relx=0.5, rely=0.05, relwidth=0.75, relheight=0.1, anchor='n')
         
@@ -68,12 +68,12 @@ class main_screen():
         address2 = tk.Label(self.lower_frame, bg="#99aab5", font=('Courier', 24))
         address2.place(rely=0.825, relwidth=1, relheight=0.165)
 
-        #button for state entry
+        #button for file explorer
         #I only want its command to run once, when it's clicked so I made a 
         #simple lambda that invokes the info_display function
         self.button = tk.Button(self.weather_frame, text="Web Scrape", font=('Courier', 24), bg='white', 
         command=lambda:retrieve_file())
-        self.button.place(relx=0.7, relheight=1, relwidth=0.3)
+        self.button.place(relx=0, relheight=1, relwidth=1)
 
         #next and prev. buttons for chambers navigation
         
