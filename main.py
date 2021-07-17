@@ -39,17 +39,17 @@ class main_screen():
         #these properties will mostly stay constant throughout all windows
         self.master = master
         self.master.title("Windows Background Thing")
-        self.canvas = tk.Canvas(self.master, height=HEIGHT, width=WIDTH, bg = '#23272a')
+        self.canvas = tk.Canvas(self.master, height=HEIGHT, width=WIDTH, bg = '#009DFF')
         self.canvas.pack()
-        self.master.config(bg = "#23272a")
+        self.master.config(bg = "#009DFF")
         self.master.resizable(width=False, height=False)
 
         #fitting the button for opening the file explorer
-        self.weather_frame = tk.Frame(self.master, bg="#99aab5", bd=5)
+        self.weather_frame = tk.Frame(self.master, bg="#C70039", bd=5)
         self.weather_frame.place(relx=0.4, rely=0.075, relwidth=0.75, relheight=0.1, anchor='n')
         
         #fitting the output
-        self.lower_frame = tk.Frame(self.master, highlightcolor="#99aab5", bd=10)
+        self.lower_frame = tk.Frame(self.master, highlightcolor="#C70039", bd=10, bg="#00008B")
         self.lower_frame.place(relx=0.4, rely=0.225, relwidth=0.75, relheight=0.7, anchor='n')
 
         #button for file explorer
@@ -61,7 +61,7 @@ class main_screen():
 
         #submit button to accept the file
 
-        self.submit_frame = tk.Frame(self.master, highlightcolor="#99aab5", bd=10)
+        self.submit_frame = tk.Frame(self.master, highlightcolor="#C70039", bd=10, bg="#C70039")
         self.submit_frame.place(relwidth=0.175, relheight=0.85, rely=0.075, relx=0.8)
 
         self.submit_pic = tk.PhotoImage(file='./images/submit_pic.png')
