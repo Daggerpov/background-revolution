@@ -1,5 +1,7 @@
 import os, sys, ctypes
 
+from appscript import app, mactypes
+
 import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
@@ -8,6 +10,15 @@ from PIL import ImageTk, Image
 HEIGHT, WIDTH = 768, 1366
 
 def main():
+    global win, mac
+    #determining OS of user
+    if sys.platform == "win32":
+        win, mac = True, False 
+    elif sys.platform == "darwin":
+        win, mac = False, True
+    else:
+        exit()
+
     #initializing module
     global root
     root = tk.Tk()
@@ -62,14 +73,18 @@ class main_screen():
 
         global name_of_file
 
-        name_of_file = filedialog.askopenfilename(initialdir='/This PC', title='Select an Image File', filetypes=(
+        if win:
+            directory = '/This PC' 
+        else:
+            directory = '/Recents' 
+
+        name_of_file = filedialog.askopenfilename(initialdir=directory, title='Select an Image File', filetypes=(
             (a, "*.png"), 
             (a, "*.jpeg"), 
             (a, "*.jpg*"), #should be *.jpg
             (a, "*.gif"),
             (a, "*.tiff"),
             (a, "*.psd"),
-            (a, "*.pdf"),
             (a, "*.eps"),
             (a, "*.ai"),
             (a, "*.indd"),
@@ -87,8 +102,11 @@ class main_screen():
     
     
     def set_background_uploaded(self):
-        self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        ctypes.windll.user32.SystemParametersInfoW(20, 0, name_of_file , 0)
+        if win:
+            #self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, name_of_file , 0)
+        else:
+            app('Finder').desktop_picture.set(mactypes.File(name_of_file))
 
 
 if __name__ == '__main__':
