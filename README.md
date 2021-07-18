@@ -7,7 +7,9 @@ This will be an application for users to customize their windows backgrounds by 
 ## How? 
 
 - Clone the repo on a Windows computer
-- Get "pillow" installed through the     pip install pillow (doing this in a virtual environment is recommended)
+- Open your terminal in the directory that the repo is in
+- Install the required Python modules by running the requirements.txt file as such: `pip install -r requirements.txt` (_doing this in a virtual environment is recommended_)
+- Run the file using `python main.py` or another method of your choosing
 
 colour palette: 
 ![image](https://user-images.githubusercontent.com/53918934/126056680-c051dda0-a1ee-4e49-a569-a84eaa878ab2.png)
