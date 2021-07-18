@@ -1,9 +1,9 @@
+from tkinter import *
 import tkinter as tk
 from tkinter import ttk, filedialog
-#from PIL import ImageTk, Image
+from PIL import ImageTk, Image
 
-HEIGHT = 768
-WIDTH = 1366
+HEIGHT, WIDTH = 768, 1366
 
 def main():
     #initializing module
@@ -19,23 +19,25 @@ def retrieve_file(lower_frame):
     a = 'compatible image files'
 
     name_of_file = filedialog.askopenfilename(initialdir='/This PC', title='Select an Image File', filetypes=(
-            # (a", "*.png"), 
-            # (a, "*.jpeg"), 
-            (a, "*.*"), #should be *.jpg
-            # (a, "*.gif"),
-            # (a, "*.tiff"),
-            # (a, "*.psd"),
-            # (a, "*.pdf"),
-            # (a, "*.eps"),
-            # (a, "*.ai"),
-            # (a, "*.indd"),
-            # (a, "*.raw")
-        )
+        (a, "*.png"), 
+        (a, "*.jpeg"), 
+        (a, "*.jpg*"), #should be *.jpg
+        (a, "*.gif"),
+        (a, "*.tiff"),
+        (a, "*.psd"),
+        (a, "*.pdf"),
+        (a, "*.eps"),
+        (a, "*.ai"),
+        (a, "*.indd"),
+        (a, "*.raw")
+    )
     )
 
     background_uploaded = ImageTk.PhotoImage(Image.open(name_of_file))
-    background_uploaded_label = tk.Label(lower_frame, image=background_uploaded)
-    background_uploaded_label.pack()
+    background_uploaded_label = tk.Label(lower_frame) 
+    background_uploaded_label.place(relheight=1, relwidth=1)
+    background_uploaded_label.configure(image=background_uploaded)
+    background_uploaded_label.image = background_uploaded
     print(name_of_file)
 
 class main_screen():
@@ -43,9 +45,9 @@ class main_screen():
         #these properties will mostly stay constant throughout all windows
         self.master = master
         self.master.title("Windows Background Thing")
-        self.canvas = tk.Canvas(self.master, height=HEIGHT, width=WIDTH, bg="#5E176A")
+        self.canvas = tk.Canvas(self.master, height=HEIGHT, width=WIDTH, bg="#66AFF5")
         self.canvas.pack()
-        self.master.config(bg="#5E176A")
+        self.master.config(bg="#66AFF5")
         self.master.resizable(width=False, height=False)
 
         #fitting the button for opening the file explorer
@@ -53,7 +55,7 @@ class main_screen():
         self.weather_frame.place(relx=0.4, rely=0.075, relwidth=0.75, relheight=0.1, anchor='n')
         
         #fitting the output
-        self.lower_frame = tk.Frame(self.master, highlightcolor="#73B504", bd=10, bg="#111905")
+        self.lower_frame = tk.Frame(self.master, highlightcolor="#73B504", bd=10, bg="#73B504")
         self.lower_frame.place(relx=0.4, rely=0.225, relwidth=0.75, relheight=0.7, anchor='n')
 
         #button for file explorer
@@ -71,8 +73,7 @@ class main_screen():
         self.submit_pic = tk.PhotoImage(file='./images/submit_pic.png')
         self.submit_pic_new = self.submit_pic.subsample(2, 2)
 
-        self.submit_pic_button = tk.Button(self.submit_frame, image=self.submit_pic_new, bd=5
-        , bg="white")#command=lambda:
+        self.submit_pic_button = tk.Button(self.submit_frame, image=self.submit_pic_new, bg="white")#command=lambda:
         self.submit_pic_button.place(relx=0, relheight=1, relwidth=1) 
     
 
