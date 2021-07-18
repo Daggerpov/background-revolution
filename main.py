@@ -1,6 +1,5 @@
 import os, sys, ctypes
 
-from tkinter import *
 import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
@@ -60,7 +59,6 @@ class main_screen():
     
     def retrieve_file(lower_frame):
         a = 'compatible image files'
-
 
         global name_of_file
 
