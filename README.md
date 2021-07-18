@@ -1,4 +1,4 @@
-# windows background thing
+# Background Revolution
 
 ## What?
 
