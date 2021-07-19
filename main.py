@@ -62,7 +62,7 @@ class main_screen():
         self.submit_frame = tk.Frame(self.master, highlightcolor="#73B504", bd=10, bg="#73B504")
         self.submit_frame.place(relwidth=0.175, relheight=0.85, rely=0.075, relx=0.8)
 
-        self.submit_pic = tk.PhotoImage(file='./images/submit_pic.png')
+        self.submit_pic = tk.PhotoImage(file='./images/submit_arrow.png')
         self.submit_pic_new = self.submit_pic.subsample(2, 2)
 
         self.submit_pic_button = tk.Button(self.submit_frame, image=self.submit_pic_new, bg="white", 
