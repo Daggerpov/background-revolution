@@ -47,6 +47,8 @@ class main_screen():
         #fitting the output
         self.lower_frame = tk.Frame(self.master, highlightcolor="#73B504", bd=10, bg="#73B504")
         self.lower_frame.place(relx=0.4, rely=0.225, relwidth=0.75, relheight=0.7, anchor='n')
+        self.preview_text = tk.Label(self.lower_frame, text="Preview your image here", bg="#73B504", font=('Courier', 24, "bold"), fg="#0F893B")
+        self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
 
         #button for file explorer
         #I only want its command to run once, when it's clicked so I made a 
