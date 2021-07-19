@@ -1,7 +1,5 @@
 import os, sys, ctypes
 
-from appscript import app, mactypes
-
 import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
@@ -15,6 +13,7 @@ def main():
     if sys.platform == "win32":
         win, mac = True, False 
     elif sys.platform == "darwin":
+        from appscript import app, mactypes
         win, mac = False, True
     else:
         exit()
