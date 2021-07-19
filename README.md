@@ -6,6 +6,7 @@ This will be an application for users to customize their windows backgrounds by 
 
 ## How? 
 
+- Make sure you have Python 3.8+ installed and added to `PATH`
 - Clone the repo on a computer running either Windows 10 or MacOS
 - Open your terminal in the directory that the repo is in
 - Install the required Python modules by running the requirements.txt file as such: `pip install -r requirements.txt` (_doing this in a virtual environment is recommended_)
