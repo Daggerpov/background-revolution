@@ -6,7 +6,6 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
 
-
 HEIGHT, WIDTH = 768, 1366
 
 def main():
@@ -28,8 +27,6 @@ def main():
     
     # #overall GUI loop which will run constantly, accepting input and such
     root.mainloop()    
-
-
 
 class main_screen():
     def __init__(self, master):
@@ -100,14 +97,12 @@ class main_screen():
         background_uploaded_label.configure(image=background_uploaded)
         background_uploaded_label.image = background_uploaded
     
-    
     def set_background_uploaded(self):
         if win:
             #self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
             ctypes.windll.user32.SystemParametersInfoW(20, 0, name_of_file , 0)
         else:
             app('Finder').desktop_picture.set(mactypes.File(name_of_file))
-
 
 if __name__ == '__main__':
     main()
