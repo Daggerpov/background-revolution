@@ -1,22 +1,28 @@
 import os, sys, ctypes
 
-from appscript import app, mactypes
-
 import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
 
+#determining OS of user
+#ratio is to compensate for text size differential between Windows and macOS
+
+if sys.platform == "win32":
+    win, mac = True, False 
+    ratio = 1
+elif sys.platform == "darwin":
+    from appscript import app, mactypes
+    win, mac = False, True
+    ratio = 1.375
+else:
+    exit()
+
+
 HEIGHT, WIDTH = 768, 1366
 
 def main():
-    global win, mac
-    #determining OS of user
-    if sys.platform == "win32":
-        win, mac = True, False 
-    elif sys.platform == "darwin":
-        win, mac = False, True
-    else:
-        exit()
+    
+    
 
     #initializing module
     global root
@@ -45,6 +51,10 @@ class main_screen():
         #fitting the output
         self.lower_frame = tk.Frame(self.master, highlightcolor="#73B504", bd=10, bg="#73B504")
         self.lower_frame.place(relx=0.4, rely=0.225, relwidth=0.75, relheight=0.7, anchor='n')
+        
+        self.preview_text = tk.Label(self.lower_frame, text="<Preview Your Image Here>", bg="#73B504", 
+        font=('Courier', int(48*ratio), "bold"), fg="#0F893B")
+        self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
 
         #button for file explorer
         #I only want its command to run once, when it's clicked so I made a 
@@ -58,7 +68,7 @@ class main_screen():
         self.submit_frame = tk.Frame(self.master, highlightcolor="#73B504", bd=10, bg="#73B504")
         self.submit_frame.place(relwidth=0.175, relheight=0.85, rely=0.075, relx=0.8)
 
-        self.submit_pic = tk.PhotoImage(file='./images/submit_pic.png')
+        self.submit_pic = tk.PhotoImage(file='./images/submit_arrow.png')
         self.submit_pic_new = self.submit_pic.subsample(2, 2)
 
         self.submit_pic_button = tk.Button(self.submit_frame, image=self.submit_pic_new, bg="white", 
