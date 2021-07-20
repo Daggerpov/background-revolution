@@ -4,22 +4,25 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
 
+#determining OS of user
+#ratio is to compensate for text size differential between Windows and macOS
+
+if sys.platform == "win32":
+    win, mac = True, False 
+    ratio = 1
+elif sys.platform == "darwin":
+    from appscript import app, mactypes
+    win, mac = False, True
+    ratio = 1.375
+else:
+    exit()
+
 
 HEIGHT, WIDTH = 768, 1366
 
 def main():
-    global win, mac, ratio
-    #determining OS of user
-    #ratio is to compensate for text size differential between Windows and macOS
-    if sys.platform == "win32":
-        win, mac = True, False 
-        ratio = 1
-    elif sys.platform == "darwin":
-        from appscript import app, mactypes
-        win, mac = False, True
-        ratio = 1.375
-    else:
-        exit()
+    
+    
 
     #initializing module
     global root
@@ -51,7 +54,8 @@ class main_screen():
         self.lower_frame = tk.Frame(self.master, highlightcolor="#73B504", bd=10, bg="#73B504")
         self.lower_frame.place(relx=0.4, rely=0.225, relwidth=0.75, relheight=0.7, anchor='n')
         
-        self.preview_text = tk.Label(self.lower_frame, text="<Preview Your Image Here>", bg="#73B504", font=('Courier', 48*ratio, "bold"), fg="#0F893B")
+        self.preview_text = tk.Label(self.lower_frame, text="<Preview Your Image Here>", bg="#73B504", 
+        font=('Courier', int(48*ratio), "bold"), fg="#0F893B")
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
 
         #button for file explorer
@@ -112,7 +116,6 @@ class main_screen():
             ctypes.windll.user32.SystemParametersInfoW(20, 0, name_of_file , 0)
         else:
             app('Finder').desktop_picture.set(mactypes.File(name_of_file))
-
 
 if __name__ == '__main__':
     main()
