@@ -17,18 +17,22 @@ elif sys.platform == "darwin":
 else:
     exit()
 
+#initializing module
+root = tk.Tk()
 
-HEIGHT, WIDTH = 768, 1366
+screen_width, screen_height =  root.winfo_screenwidth(), root.winfo_screenheight()
+root.geometry(f'{screen_width}x{screen_height}+0+0')
+
+#assuming 768p is the smallest screen sizes people will have that are using this app, 
+#here we're making the text bigger for anyone using a size bigger such as 1080p. 
+if screen_height != 1024:
+    ratio *= 1.4
+
+#makes app fullscreen, but no way to exit from within it, need to alt-tab out or use keyboard shortcut
+#root.attributes('-fullscreen', True)
 
 def main():
-    
-    
-
-    #initializing module
-    global root
-    root = tk.Tk()
-    
-    # #setting the current screen to start menu
+    #setting the current screen to start menu
     app = main_screen(root)
     
     # #overall GUI loop which will run constantly, accepting input and such
@@ -38,8 +42,8 @@ class main_screen():
     def __init__(self, master):
         #these properties will mostly stay constant throughout all windows
         self.master = master
-        self.master.title("Windows Background Thing")
-        self.canvas = tk.Canvas(self.master, height=HEIGHT, width=WIDTH, bg="#66AFF5")
+        self.master.title("Background Revolution")
+        self.canvas = tk.Canvas(self.master, width=screen_width, height=screen_height, bg="#66AFF5")
         self.canvas.pack()
         self.master.config(bg="#66AFF5")
         self.master.resizable(width=False, height=False)
@@ -99,13 +103,13 @@ class main_screen():
         )
         )
 
-        background_uploaded = ImageTk.PhotoImage(Image.open(name_of_file))
-        
-        background_uploaded_label = tk.Label(lower_frame) 
-        background_uploaded_label.place(relheight=1, relwidth=1)
+        if name_of_file != '':
+            background_uploaded = ImageTk.PhotoImage(Image.open(name_of_file))
+            background_uploaded_label = tk.Label(lower_frame) 
+            background_uploaded_label.place(relheight=1, relwidth=1)
 
-        background_uploaded_label.configure(image=background_uploaded)
-        background_uploaded_label.image = background_uploaded
+            background_uploaded_label.configure(image=background_uploaded)
+            background_uploaded_label.image = background_uploaded
     
     def set_background_uploaded(self):
         if win:
