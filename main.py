@@ -82,7 +82,7 @@ class main_screen:
         self.button = tk.Button(
             self.weather_frame,
             text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
-            font=("Courier", 40),
+            font=("Courier", 40 * ratio),
             bg="#e5efde",
             command=lambda: main_screen.retrieve_file(self.lower_frame),
         )
