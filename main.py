@@ -81,7 +81,7 @@ class main_screen:
         # simple lambda that invokes the info_display function
         self.button = tk.Button(
             self.weather_frame,
-            text="Select Image in File Explorer",
+            text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
             font=("Courier", 40),
             bg="#e5efde",
             command=lambda: main_screen.retrieve_file(self.lower_frame),
@@ -116,13 +116,13 @@ class main_screen:
         else:
             directory = "/Recents"
 
-        name_of_file = filedialog.askopenfilename(
+        names_of_files = list(filedialog.askopenfilenames(
             initialdir=directory,
-            title="Select an Image File",
+            title="Select Image Files",
             filetypes=(
                 (a, "*.png"),
                 (a, "*.jpeg"),
-                (a, "*.jpg*"),  # should be *.jpg
+                (a, "*.jpg*"),
                 (a, "*.gif"),
                 (a, "*.tiff"),
                 (a, "*.psd"),
@@ -131,10 +131,10 @@ class main_screen:
                 (a, "*.indd"),
                 (a, "*.raw"),
             ),
-        )
+        ))
 
-        if name_of_file != "":
-            background_uploaded = ImageTk.PhotoImage(Image.open(name_of_file))
+        if names_of_files != "":
+            background_uploaded = ImageTk.PhotoImage(Image.open(str(names_of_files[0])))
             background_uploaded_label = tk.Label(lower_frame)
             background_uploaded_label.place(relheight=1, relwidth=1)
 
@@ -144,9 +144,9 @@ class main_screen:
     def set_background_uploaded(self):
         if win:
             # self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
-            ctypes.windll.user32.SystemParametersInfoW(20, 0, name_of_file, 0)
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, names_of_files, 0)
         else:
-            app("Finder").desktop_picture.set(mactypes.File(name_of_file))
+            app("Finder").desktop_picture.set(mactypes.File(names_of_files))
 
 
 if __name__ == "__main__":
