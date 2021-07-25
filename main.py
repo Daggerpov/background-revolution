@@ -6,6 +6,7 @@ from PIL import ImageTk, Image
 
 # determining OS of user
 # ratio is to compensate for text size differential between Windows and macOS
+# every text attribute's font size should be preceded by int(ratio * {font size})
 
 if sys.platform == "win32":
     win, mac = True, False
@@ -41,7 +42,7 @@ def main():
     root.mainloop()
 
 
-class main_screen():
+class main_screen:
     def __init__(self, master):
         # these properties will mostly stay constant throughout all windows
         self.master = master
@@ -52,27 +53,49 @@ class main_screen():
         self.canvas.pack()
         self.master.config(bg="#66AFF5")
         self.master.resizable(width=False, height=False)
-    
+
+        self.title_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
+        self.title_frame.place(
+            relx=0.4, rely=0.025, relwidth=0.75, relheight=0.15, anchor="n"
+        )
+
+        self.title_label = tk.Label(
+            self.title_frame,
+            text="Background Revolution",
+            font=("Courier", int(38 * ratio)),
+        )
+        self.title_label.place(relwidth=1, relheight=1)
+
+        #NEED TO MAKE SETTINGS BUTTON HERE
+
+        
+
     def go_custom_screen(self):
         self.custom_screen_current = tk.TopLevel(self.master)
         self.app = custom_screen(self.custom_screen_current)
+
     def go_preset_screen(self):
         self.preset_screen_current = tk.TopLevel(self.master)
         self.app = preset_screen(self.preset_screen_current)
+
     def go_search_screen(self):
         self.search_screen_current = tk.TopLevel(self.master)
         self.app = search_screen(self.search_screen_current)
+
     def go_manage_screen(self):
         self.manage_screen_current = tk.TopLevel(self.master)
         self.app = manage_screen(self.manage_screen_current)
+
     def go_schedule_screen(self):
         self.schedule_screen_current = tk.TopLevel(self.master)
         self.app = schedule_screen(self.schedule_screen_current)
+
     def go_settings_screen(self):
         self.settings_screen_current = tk.TopLevel(self.master)
         self.app = settings_screen(self.settings_screen_current)
-    
-class custom_screen():
+
+
+class custom_screen:
     def __init__(self, master):
         # these properties will mostly stay constant throughout all windows
         self.master = master
@@ -85,21 +108,21 @@ class custom_screen():
         self.master.resizable(width=False, height=False)
 
         # fitting the button for opening the file explorer
-        self.weather_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
-        self.weather_frame.place(
+        self.select_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
+        self.select_frame.place(
             relx=0.4, rely=0.075, relwidth=0.75, relheight=0.1, anchor="n"
         )
 
         # fitting the output
-        self.lower_frame = tk.Frame(
+        self.preview_frame = tk.Frame(
             self.master, highlightcolor="#13ae4b", bd=10, bg="#13ae4b"
         )
-        self.lower_frame.place(
+        self.preview_frame.place(
             relx=0.4, rely=0.225, relwidth=0.75, relheight=0.7, anchor="n"
         )
 
         self.preview_text = tk.Label(
-            self.lower_frame,
+            self.preview_frame,
             text="<Preview Your Image Here>",
             bg="#13ae4b",
             font=("Courier", int(48 * ratio), "bold"),
@@ -111,11 +134,11 @@ class custom_screen():
         # I only want its command to run once, when it's clicked so I made a
         # simple lambda that invokes the info_display function
         self.button = tk.Button(
-            self.weather_frame,
+            self.select_frame,
             text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
             font=("Courier", int(38 * ratio)),
             bg="#e5efde",
-            command=lambda: main_screen.retrieve_file(self.lower_frame),
+            command=lambda: main_screen.retrieve_file(self.preview_frame),
         )
         self.button.place(relx=0, relheight=1, relwidth=1)
 
@@ -137,7 +160,7 @@ class custom_screen():
         )
         self.submit_pic_button.place(relx=0, relheight=1, relwidth=1)
 
-    def retrieve_file(lower_frame):
+    def retrieve_file(preview_frame):
         a = "compatible image files"
 
         global name_of_file
@@ -147,26 +170,28 @@ class custom_screen():
         else:
             directory = "/Recents"
 
-        names_of_files = list(filedialog.askopenfilenames(
-            initialdir=directory,
-            title="Select Image Files",
-            filetypes=(
-                (a, "*.png"),
-                (a, "*.jpeg"),
-                (a, "*.jpg*"),
-                (a, "*.gif"),
-                (a, "*.tiff"),
-                (a, "*.psd"),
-                (a, "*.eps"),
-                (a, "*.ai"),
-                (a, "*.indd"),
-                (a, "*.raw"),
-            ),
-        ))
+        names_of_files = list(
+            filedialog.askopenfilenames(
+                initialdir=directory,
+                title="Select Image Files",
+                filetypes=(
+                    (a, "*.png"),
+                    (a, "*.jpeg"),
+                    (a, "*.jpg*"),
+                    (a, "*.gif"),
+                    (a, "*.tiff"),
+                    (a, "*.psd"),
+                    (a, "*.eps"),
+                    (a, "*.ai"),
+                    (a, "*.indd"),
+                    (a, "*.raw"),
+                ),
+            )
+        )
 
         if names_of_files != "":
             background_uploaded = ImageTk.PhotoImage(Image.open(str(names_of_files[0])))
-            background_uploaded_label = tk.Label(lower_frame)
+            background_uploaded_label = tk.Label(preview_frame)
             background_uploaded_label.place(relheight=1, relwidth=1)
 
             background_uploaded_label.configure(image=background_uploaded)
@@ -179,7 +204,8 @@ class custom_screen():
         else:
             app("Finder").desktop_picture.set(mactypes.File(names_of_files))
 
-class preset_screen():
+
+class preset_screen:
     def __init__(self, master):
         # these properties will mostly stay constant throughout all windows
         self.master = master
@@ -191,7 +217,8 @@ class preset_screen():
         self.master.config(bg="#66AFF5")
         self.master.resizable(width=False, height=False)
 
-class search_screen():
+
+class search_screen:
     def __init__(self, master):
         # these properties will mostly stay constant throughout all windows
         self.master = master
@@ -203,7 +230,8 @@ class search_screen():
         self.master.config(bg="#66AFF5")
         self.master.resizable(width=False, height=False)
 
-class manage_screen():
+
+class manage_screen:
     def __init__(self, master):
         # these properties will mostly stay constant throughout all windows
         self.master = master
@@ -215,7 +243,8 @@ class manage_screen():
         self.master.config(bg="#66AFF5")
         self.master.resizable(width=False, height=False)
 
-class schedule_screen():
+
+class schedule_screen:
     def __init__(self, master):
         # these properties will mostly stay constant throughout all windows
         self.master = master
@@ -227,7 +256,8 @@ class schedule_screen():
         self.master.config(bg="#66AFF5")
         self.master.resizable(width=False, height=False)
 
-class settings_screen():
+
+class settings_screen:
     def __init__(self, master):
         # these properties will mostly stay constant throughout all windows
         self.master = master
@@ -238,6 +268,7 @@ class settings_screen():
         self.canvas.pack()
         self.master.config(bg="#66AFF5")
         self.master.resizable(width=False, height=False)
+
 
 if __name__ == "__main__":
     main()
