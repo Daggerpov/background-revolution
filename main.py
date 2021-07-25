@@ -41,11 +41,42 @@ def main():
     root.mainloop()
 
 
-class main_screen:
+class main_screen():
     def __init__(self, master):
         # these properties will mostly stay constant throughout all windows
         self.master = master
         self.master.title("Background Revolution")
+        self.canvas = tk.Canvas(
+            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
+        )
+        self.canvas.pack()
+        self.master.config(bg="#66AFF5")
+        self.master.resizable(width=False, height=False)
+    
+    def go_custom_screen(self):
+        self.custom_screen_current = tk.TopLevel(self.master)
+        self.app = custom_screen(self.custom_screen_current)
+    def go_preset_screen(self):
+        self.preset_screen_current = tk.TopLevel(self.master)
+        self.app = preset_screen(self.preset_screen_current)
+    def go_search_screen(self):
+        self.search_screen_current = tk.TopLevel(self.master)
+        self.app = search_screen(self.search_screen_current)
+    def go_manage_screen(self):
+        self.manage_screen_current = tk.TopLevel(self.master)
+        self.app = manage_screen(self.manage_screen_current)
+    def go_schedule_screen(self):
+        self.schedule_screen_current = tk.TopLevel(self.master)
+        self.app = schedule_screen(self.schedule_screen_current)
+    def go_settings_screen(self):
+        self.settings_screen_current = tk.TopLevel(self.master)
+        self.app = settings_screen(self.settings_screen_current)
+    
+class custom_screen():
+    def __init__(self, master):
+        # these properties will mostly stay constant throughout all windows
+        self.master = master
+        self.master.title("Background Revolution - Custom Collections")
         self.canvas = tk.Canvas(
             self.master, width=screen_width, height=screen_height, bg="#66AFF5"
         )
@@ -82,7 +113,7 @@ class main_screen:
         self.button = tk.Button(
             self.weather_frame,
             text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
-            font=("Courier", 40 * ratio),
+            font=("Courier", int(38 * ratio)),
             bg="#e5efde",
             command=lambda: main_screen.retrieve_file(self.lower_frame),
         )
@@ -148,6 +179,65 @@ class main_screen:
         else:
             app("Finder").desktop_picture.set(mactypes.File(names_of_files))
 
+class preset_screen():
+    def __init__(self, master):
+        # these properties will mostly stay constant throughout all windows
+        self.master = master
+        self.master.title("Background Revolution - Preset Collections")
+        self.canvas = tk.Canvas(
+            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
+        )
+        self.canvas.pack()
+        self.master.config(bg="#66AFF5")
+        self.master.resizable(width=False, height=False)
+
+class search_screen():
+    def __init__(self, master):
+        # these properties will mostly stay constant throughout all windows
+        self.master = master
+        self.master.title("Background Revolution - Search Collections")
+        self.canvas = tk.Canvas(
+            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
+        )
+        self.canvas.pack()
+        self.master.config(bg="#66AFF5")
+        self.master.resizable(width=False, height=False)
+
+class manage_screen():
+    def __init__(self, master):
+        # these properties will mostly stay constant throughout all windows
+        self.master = master
+        self.master.title("Background Revolution - Manage Collections")
+        self.canvas = tk.Canvas(
+            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
+        )
+        self.canvas.pack()
+        self.master.config(bg="#66AFF5")
+        self.master.resizable(width=False, height=False)
+
+class schedule_screen():
+    def __init__(self, master):
+        # these properties will mostly stay constant throughout all windows
+        self.master = master
+        self.master.title("Background Revolution - Schedule Collection Rotations")
+        self.canvas = tk.Canvas(
+            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
+        )
+        self.canvas.pack()
+        self.master.config(bg="#66AFF5")
+        self.master.resizable(width=False, height=False)
+
+class settings_screen():
+    def __init__(self, master):
+        # these properties will mostly stay constant throughout all windows
+        self.master = master
+        self.master.title("Background Revolution - Settings")
+        self.canvas = tk.Canvas(
+            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
+        )
+        self.canvas.pack()
+        self.master.config(bg="#66AFF5")
+        self.master.resizable(width=False, height=False)
 
 if __name__ == "__main__":
     main()
