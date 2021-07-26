@@ -57,9 +57,18 @@ def create_window(self, master, extra=""):
     current_window.config(bg="#66AFF5")
     current_window.resizable(width=False, height=False)
 
+    self.exit_button = tk.Button(
+        current_window, 
+        text="Quit", 
+        font=("Courier", int(38 * ratio)),
+        command=lambda: root.destroy(),
+        bg="#13ae4b",
+        bd=5)
+    self.exit_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
+
     # if the user kills the window via the window manager,
     # exit the application.
-    # current_window.wm_protocol("WM_DELETE_WINDOW", root.destroy)
+    current_window.wm_protocol("WM_DELETE_WINDOW", root.destroy)
     
     return current_window
 
@@ -70,7 +79,7 @@ class main_screen:
 
         self.title_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
         self.title_frame.place(
-            relx=0.4, rely=0.025, relwidth=0.75, relheight=0.15, anchor="n"
+            relx=0.5, rely=0.025, relwidth=0.7, relheight=0.15, anchor="n"
         )
 
         self.title_label = tk.Label(
