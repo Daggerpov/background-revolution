@@ -1,4 +1,4 @@
-# Background Revolution (In Development)
+# Background Revolution (In Development, Pre-Alpha)
 
 ## What?
 
