@@ -3,6 +3,7 @@ import os, sys, ctypes
 import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
+import time
 
 # determining OS of user
 # ratio is to compensate for text size differential between Windows and macOS
@@ -21,6 +22,8 @@ else:
 
 # initializing module
 root = tk.Tk()
+# root.withdraw()
+current_window = None
 
 screen_width, screen_height = root.winfo_screenwidth(), root.winfo_screenheight()
 root.geometry(f"{screen_width}x{screen_height}+0+0")
@@ -36,23 +39,34 @@ if screen_height != 1024:
 
 def main():
     # setting the current screen to start menu
-    app = main_screen(root)
+    #app = main_screen(root)
 
-    # #overall GUI loop which will run constantly, accepting input and such
+    main_screen(root)
+    # overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
+
+
+def create_window(self, master, extra=""):
+    current_window = tk.Toplevel(master)
+
+    current_window.title(f"Background Revolution{extra}")
+    self.canvas = tk.Canvas(
+        current_window, width=screen_width, height=screen_height, bg="#66AFF5"
+    )
+    self.canvas.pack()
+    current_window.config(bg="#66AFF5")
+    current_window.resizable(width=False, height=False)
+
+    # if the user kills the window via the window manager,
+    # exit the application.
+    # current_window.wm_protocol("WM_DELETE_WINDOW", root.destroy)
+    
+    return current_window
 
 
 class main_screen:
     def __init__(self, master):
-        # these properties will mostly stay constant throughout all windows
-        self.master = master
-        self.master.title("Background Revolution")
-        self.canvas = tk.Canvas(
-            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
-        )
-        self.canvas.pack()
-        self.master.config(bg="#66AFF5")
-        self.master.resizable(width=False, height=False)
+        self.master = create_window(self, master)
 
         self.title_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
         self.title_frame.place(
@@ -66,52 +80,50 @@ class main_screen:
         )
         self.title_label.place(relwidth=1, relheight=1)
 
-        #NEED TO MAKE SETTINGS BUTTON HERE
+        self.settings_frame = tk.Frame(
+            self.master, highlightcolor="#13ae4b", bd=5, bg="#13ae4b"
+        )
+        self.settings_frame.place(relwidth=0.175, relheight=0.85, rely=0.075, relx=0.8)
 
-        
+        self.settings_pic = tk.PhotoImage(file="./images/settings_icon.png")
+        # self.settings_pic_new = self.submit_pic.subsample(2, 2)
+
+        self.settings_pic_button = tk.Button(
+            self.settings_frame,
+            image=self.settings_pic,
+            bg="#e5efde",
+            command=lambda: main_screen.go_settings_screen(self),
+        )
+        self.settings_pic_button.place(relx=0, relheight=1, relwidth=1)
 
     def go_custom_screen(self):
-        self.custom_screen_current = tk.TopLevel(self.master)
+        self.custom_screen_current = tk.Toplevel(self.master)
         self.app = custom_screen(self.custom_screen_current)
 
     def go_preset_screen(self):
-        self.preset_screen_current = tk.TopLevel(self.master)
+        self.preset_screen_current = tk.Toplevel(self.master)
         self.app = preset_screen(self.preset_screen_current)
 
     def go_search_screen(self):
-        self.search_screen_current = tk.TopLevel(self.master)
+        self.search_screen_current = tk.Toplevel(self.master)
         self.app = search_screen(self.search_screen_current)
 
     def go_manage_screen(self):
-        self.manage_screen_current = tk.TopLevel(self.master)
+        self.manage_screen_current = tk.Toplevel(self.master)
         self.app = manage_screen(self.manage_screen_current)
 
     def go_schedule_screen(self):
-        self.schedule_screen_current = tk.TopLevel(self.master)
+        self.schedule_screen_current = tk.Toplevel(self.master)
         self.app = schedule_screen(self.schedule_screen_current)
 
     def go_settings_screen(self):
-        self.settings_screen_current = tk.TopLevel(self.master)
-        self.app = settings_screen(self.settings_screen_current)
+        self.master.destroy()
+        settings_screen(root)
 
 
 class custom_screen:
     def __init__(self, master):
-        # these properties will mostly stay constant throughout all windows
-        self.master = master
-        self.master.title("Background Revolution - Custom Collections")
-        self.canvas = tk.Canvas(
-            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
-        )
-        self.canvas.pack()
-        self.master.config(bg="#66AFF5")
-        self.master.resizable(width=False, height=False)
-
-        # fitting the button for opening the file explorer
-        self.select_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
-        self.select_frame.place(
-            relx=0.4, rely=0.075, relwidth=0.75, relheight=0.1, anchor="n"
-        )
+        self.master = create_window(self, master, '- Custom Collections')
 
         # fitting the output
         self.preview_frame = tk.Frame(
@@ -163,7 +175,7 @@ class custom_screen:
     def retrieve_file(preview_frame):
         a = "compatible image files"
 
-        global name_of_file
+        global names_of_files
 
         if win:
             directory = "/This PC"
@@ -207,67 +219,26 @@ class custom_screen:
 
 class preset_screen:
     def __init__(self, master):
-        # these properties will mostly stay constant throughout all windows
-        self.master = master
-        self.master.title("Background Revolution - Preset Collections")
-        self.canvas = tk.Canvas(
-            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
-        )
-        self.canvas.pack()
-        self.master.config(bg="#66AFF5")
-        self.master.resizable(width=False, height=False)
-
+        self.master = create_window(self, master, '- Preset Collections')
 
 class search_screen:
     def __init__(self, master):
-        # these properties will mostly stay constant throughout all windows
-        self.master = master
-        self.master.title("Background Revolution - Search Collections")
-        self.canvas = tk.Canvas(
-            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
-        )
-        self.canvas.pack()
-        self.master.config(bg="#66AFF5")
-        self.master.resizable(width=False, height=False)
+        self.master = create_window(self, master, ' - Search')
 
 
 class manage_screen:
     def __init__(self, master):
-        # these properties will mostly stay constant throughout all windows
-        self.master = master
-        self.master.title("Background Revolution - Manage Collections")
-        self.canvas = tk.Canvas(
-            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
-        )
-        self.canvas.pack()
-        self.master.config(bg="#66AFF5")
-        self.master.resizable(width=False, height=False)
+        self.master = create_window(self, master, ' - Manage Collections')
 
 
 class schedule_screen:
     def __init__(self, master):
-        # these properties will mostly stay constant throughout all windows
-        self.master = master
-        self.master.title("Background Revolution - Schedule Collection Rotations")
-        self.canvas = tk.Canvas(
-            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
-        )
-        self.canvas.pack()
-        self.master.config(bg="#66AFF5")
-        self.master.resizable(width=False, height=False)
+        self.master = create_window(self, master, ' - Schedule Collection Rotations')
 
 
 class settings_screen:
     def __init__(self, master):
-        # these properties will mostly stay constant throughout all windows
-        self.master = master
-        self.master.title("Background Revolution - Settings")
-        self.canvas = tk.Canvas(
-            self.master, width=screen_width, height=screen_height, bg="#66AFF5"
-        )
-        self.canvas.pack()
-        self.master.config(bg="#66AFF5")
-        self.master.resizable(width=False, height=False)
+        self.master = create_window(self, master, ' - Settings')
 
 
 if __name__ == "__main__":
