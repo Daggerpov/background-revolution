@@ -44,8 +44,41 @@ def main():
     # overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
 
+class PlaceholderEntry(ttk.Entry):
+    #initializing the arguments passed in
+    def __init__(self, container, placeholder, validation, *args, **kwargs):
+        super().__init__(container, *args, style="Placeholder.TEntry", **kwargs)
+        self.placeholder = placeholder
+        self.insert("0", self.placeholder)
+        
+        #runs the appropriate method for when the user is focused in/out of the element
+        self.bind("<FocusIn>", self._clear_placeholder)
+        self.bind("<FocusOut>", self._add_placeholder)
+        
+        #if this argument is given (like for the instagram password, 
+        # then the entry box will hide its text with asterisks)
+        self.validation = validation
 
-def create_window(self, master, extra=""):
+    
+    def _clear_placeholder(self, e):
+        #deleting all text placed automatically with the placeholder
+        if self["style"] == "Placeholder.TEntry":
+            self.delete("0", "end")
+            self["style"] = "TEntry"
+        
+        #editing the property of the entry box 'show' to display asterisks ,
+        #instead of any of the entered characters
+        if self.validation == 'password':
+            self['show'] = "*"
+        
+    def _add_placeholder(self, e):
+        #if there isn't any text entered in AND the user isn't focused in 
+        #on this, then it'll add the placeholder
+        if not self.get():
+            self.insert("0", self.placeholder)
+            self["style"] = "Placeholder.TEntry"
+
+def create_window(self, master, extra="", title=('', 0)):
     current_window = tk.Toplevel(master)
 
     current_window.geometry(f"{screen_width}x{screen_height}+0+0")
@@ -56,6 +89,19 @@ def create_window(self, master, extra=""):
     self.canvas.pack()
     current_window.config(bg="#66AFF5")
     current_window.resizable(width=False, height=False)
+
+    if title != ('', 0):
+        self.title_frame = tk.Frame(current_window, bg="#13ae4b", bd=5)
+        self.title_frame.place(
+            relx=0.5, rely=0.025, relwidth=0.7, relheight=0.15, anchor="n"
+        )
+
+        self.title_label = tk.Label(
+            self.title_frame,
+            text=f"{title[0]}",
+            font=("Courier", int(title[1] * ratio)),
+        )
+        self.title_label.place(relwidth=1, relheight=1)
 
     self.exit_button = tk.Button(
         current_window, 
@@ -72,27 +118,14 @@ def create_window(self, master, extra=""):
     
     return current_window
 
-
 class main_screen:
     def __init__(self, master):
-        self.master = create_window(self, master)
-
-        self.title_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
-        self.title_frame.place(
-            relx=0.5, rely=0.025, relwidth=0.7, relheight=0.15, anchor="n"
-        )
-
-        self.title_label = tk.Label(
-            self.title_frame,
-            text="Background Revolution",
-            font=("Courier", int(38 * ratio)),
-        )
-        self.title_label.place(relwidth=1, relheight=1)
+        self.master = create_window(self, master, '', ("Background Revolution", 38))
 
         self.settings_frame = tk.Frame(
-            self.master, highlightcolor="#13ae4b", bd=5, bg="#13ae4b"
+            self.master, bd=5, bg="#13ae4b"
         )
-        self.settings_frame.place(relwidth=0.175, relheight=0.85, rely=0.075, relx=0.8)
+        self.settings_frame.place(relwidth=0.1, relheight=0.15, rely=0.025, relx=0.875)
 
         self.settings_pic = tk.PhotoImage(file="./images/settings_icon.png")
         # self.settings_pic_new = self.submit_pic.subsample(2, 2)
@@ -104,6 +137,11 @@ class main_screen:
             command=lambda: main_screen.go_settings_screen(self),
         )
         self.settings_pic_button.place(relx=0, relheight=1, relwidth=1)
+
+
+    def go_settings_screen(self):
+        self.master.destroy()
+        settings_screen(root)
 
     def go_custom_screen(self):
         self.master.destroy()
@@ -125,9 +163,11 @@ class main_screen:
         self.master.destroy()
         schedule_screen(root)
 
-    def go_settings_screen(self):
-        self.master.destroy()
-        settings_screen(root)
+class settings_screen:
+    def __init__(self, master):
+        self.master = create_window(self, master, ' - Settings')
+
+
 
 
 class custom_screen:
@@ -244,10 +284,6 @@ class schedule_screen:
     def __init__(self, master):
         self.master = create_window(self, master, ' - Schedule Collection Rotations')
 
-
-class settings_screen:
-    def __init__(self, master):
-        self.master = create_window(self, master, ' - Settings')
 
 
 if __name__ == "__main__":
