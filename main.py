@@ -26,7 +26,6 @@ root = tk.Tk()
 current_window = None
 
 screen_width, screen_height = root.winfo_screenwidth(), root.winfo_screenheight()
-root.geometry(f"{screen_width}x{screen_height}+0+0")
 
 # assuming 768p is the smallest screen sizes people will have that are using this app,
 # here we're making the text bigger for anyone using a size bigger such as 1080p.
@@ -49,6 +48,7 @@ def main():
 def create_window(self, master, extra=""):
     current_window = tk.Toplevel(master)
 
+    current_window.geometry(f"{screen_width}x{screen_height}+0+0")
     current_window.title(f"Background Revolution{extra}")
     self.canvas = tk.Canvas(
         current_window, width=screen_width, height=screen_height, bg="#66AFF5"
@@ -97,24 +97,24 @@ class main_screen:
         self.settings_pic_button.place(relx=0, relheight=1, relwidth=1)
 
     def go_custom_screen(self):
-        self.custom_screen_current = tk.Toplevel(self.master)
-        self.app = custom_screen(self.custom_screen_current)
+        self.master.destroy()
+        custom_screen(root)
 
     def go_preset_screen(self):
-        self.preset_screen_current = tk.Toplevel(self.master)
-        self.app = preset_screen(self.preset_screen_current)
+        self.master.destroy()
+        preset_screen(root)
 
     def go_search_screen(self):
-        self.search_screen_current = tk.Toplevel(self.master)
-        self.app = search_screen(self.search_screen_current)
+        self.master.destroy()
+        search_screen(root)
 
     def go_manage_screen(self):
-        self.manage_screen_current = tk.Toplevel(self.master)
-        self.app = manage_screen(self.manage_screen_current)
+        self.master.destroy()
+        manage_screen(root)
 
     def go_schedule_screen(self):
-        self.schedule_screen_current = tk.Toplevel(self.master)
-        self.app = schedule_screen(self.schedule_screen_current)
+        self.master.destroy()
+        schedule_screen(root)
 
     def go_settings_screen(self):
         self.master.destroy()
