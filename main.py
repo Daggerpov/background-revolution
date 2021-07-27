@@ -7,30 +7,30 @@ import time
 
 # determining OS of user
 # ratio is to compensate for text size differential between Windows and macOS
-# every text attribute's font size should be preceded by int(ratio * {font size})
+# every text attribute's font size should be preceded by int(RATIO * {font size})
 
 if sys.platform == "win32":
     win, mac = True, False
-    ratio = 1
+    RATIO = 1
 elif sys.platform == "darwin":
     from appscript import app, mactypes
 
     win, mac = False, True
-    ratio = 1.375
+    RATIO = 1.375
 else:
     exit()
 
 # initializing module
 root = tk.Tk()
-# root.withdraw()
+root.withdraw()
 current_window = None
 
-screen_width, screen_height = root.winfo_screenwidth(), root.winfo_screenheight()
+SCREEN_WIDTH, SCREEN_HEIGHT = root.winfo_screenwidth(), root.winfo_screenheight()
 
 # assuming 768p is the smallest screen sizes people will have that are using this app,
 # here we're making the text bigger for anyone using a size bigger such as 1080p.
-if screen_height != 1024:
-    ratio *= 1.4
+if SCREEN_HEIGHT != 1024:
+    RATIO *= 1.4
 
 # makes app fullscreen, but no way to exit from within it, need to alt-tab out or use keyboard shortcut
 # root.attributes('-fullscreen', True)
@@ -38,59 +38,60 @@ if screen_height != 1024:
 
 def main():
     # setting the current screen to start menu
-    #app = main_screen(root)
+    # app = main_screen(root)
 
     main_screen(root)
     # overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
 
+
 class PlaceholderEntry(ttk.Entry):
-    #initializing the arguments passed in
+    # initializing the arguments passed in
     def __init__(self, container, placeholder, validation, *args, **kwargs):
         super().__init__(container, *args, style="Placeholder.TEntry", **kwargs)
         self.placeholder = placeholder
         self.insert("0", self.placeholder)
-        
-        #runs the appropriate method for when the user is focused in/out of the element
+
+        # runs the appropriate method for when the user is focused in/out of the element
         self.bind("<FocusIn>", self._clear_placeholder)
         self.bind("<FocusOut>", self._add_placeholder)
-        
-        #if this argument is given (like for the instagram password, 
+
+        # if this argument is given (like for the instagram password,
         # then the entry box will hide its text with asterisks)
         self.validation = validation
 
-    
     def _clear_placeholder(self, e):
-        #deleting all text placed automatically with the placeholder
+        # deleting all text placed automatically with the placeholder
         if self["style"] == "Placeholder.TEntry":
             self.delete("0", "end")
             self["style"] = "TEntry"
-        
-        #editing the property of the entry box 'show' to display asterisks ,
-        #instead of any of the entered characters
-        if self.validation == 'password':
-            self['show'] = "*"
-        
+
+        # editing the property of the entry box 'show' to display asterisks ,
+        # instead of any of the entered characters
+        if self.validation == "password":
+            self["show"] = "*"
+
     def _add_placeholder(self, e):
-        #if there isn't any text entered in AND the user isn't focused in 
-        #on this, then it'll add the placeholder
+        # if there isn't any text entered in AND the user isn't focused in
+        # on this, then it'll add the placeholder
         if not self.get():
             self.insert("0", self.placeholder)
             self["style"] = "Placeholder.TEntry"
 
-def create_window(self, master, extra="", title=('', 0)):
+
+def create_window(self, master, extra="", title=("", 0)):
     current_window = tk.Toplevel(master)
 
-    current_window.geometry(f"{screen_width}x{screen_height}+0+0")
+    current_window.geometry(f"{SCREEN_WIDTH}x{SCREEN_HEIGHT}+0+0")
     current_window.title(f"Background Revolution{extra}")
     self.canvas = tk.Canvas(
-        current_window, width=screen_width, height=screen_height, bg="#66AFF5"
+        current_window, width=SCREEN_WIDTH, height=SCREEN_HEIGHT, bg="#66AFF5"
     )
     self.canvas.pack()
     current_window.config(bg="#66AFF5")
     current_window.resizable(width=False, height=False)
 
-    if title != ('', 0):
+    if title != ("", 0):
         self.title_frame = tk.Frame(current_window, bg="#13ae4b", bd=5)
         self.title_frame.place(
             relx=0.5, rely=0.025, relwidth=0.7, relheight=0.15, anchor="n"
@@ -99,32 +100,32 @@ def create_window(self, master, extra="", title=('', 0)):
         self.title_label = tk.Label(
             self.title_frame,
             text=f"{title[0]}",
-            font=("Courier", int(title[1] * ratio)),
+            font=("Courier", int(title[1] * RATIO)),
         )
         self.title_label.place(relwidth=1, relheight=1)
 
     self.exit_button = tk.Button(
-        current_window, 
-        text="Quit", 
-        font=("Courier", int(38 * ratio)),
+        current_window,
+        text="Quit",
+        font=("Courier", int(38 * RATIO)),
         command=lambda: root.destroy(),
         bg="#13ae4b",
-        bd=5)
+        bd=5,
+    )
     self.exit_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
     # if the user kills the window via the window manager,
     # exit the application.
     current_window.wm_protocol("WM_DELETE_WINDOW", root.destroy)
-    
+
     return current_window
+
 
 class main_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, '', ("Background Revolution", 38))
+        self.master = create_window(self, master, "", ("Background Revolution", 38))
 
-        self.settings_frame = tk.Frame(
-            self.master, bd=5, bg="#13ae4b"
-        )
+        self.settings_frame = tk.Frame(self.master, bd=5, bg="#13ae4b")
         self.settings_frame.place(relwidth=0.1, relheight=0.15, rely=0.025, relx=0.875)
 
         self.settings_pic = tk.PhotoImage(file="./images/settings_icon.png")
@@ -137,7 +138,6 @@ class main_screen:
             command=lambda: main_screen.go_settings_screen(self),
         )
         self.settings_pic_button.place(relx=0, relheight=1, relwidth=1)
-
 
     def go_settings_screen(self):
         self.master.destroy()
@@ -163,16 +163,15 @@ class main_screen:
         self.master.destroy()
         schedule_screen(root)
 
+
 class settings_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, ' - Settings')
-
-
+        self.master = create_window(self, master, " - Settings")
 
 
 class custom_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, '- Custom Collections')
+        self.master = create_window(self, master, "- Custom Collections")
 
         # fitting the output
         self.preview_frame = tk.Frame(
@@ -186,7 +185,7 @@ class custom_screen:
             self.preview_frame,
             text="<Preview Your Image Here>",
             bg="#13ae4b",
-            font=("Courier", int(48 * ratio), "bold"),
+            font=("Courier", int(48 * RATIO), "bold"),
             fg="#0f893b",
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
@@ -197,7 +196,7 @@ class custom_screen:
         self.button = tk.Button(
             self.select_frame,
             text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
-            font=("Courier", int(38 * ratio)),
+            font=("Courier", int(38 * RATIO)),
             bg="#e5efde",
             command=lambda: main_screen.retrieve_file(self.preview_frame),
         )
@@ -268,22 +267,22 @@ class custom_screen:
 
 class preset_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, '- Preset Collections')
+        self.master = create_window(self, master, "- Preset Collections")
+
 
 class search_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, ' - Search')
+        self.master = create_window(self, master, " - Search")
 
 
 class manage_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, ' - Manage Collections')
+        self.master = create_window(self, master, " - Manage Collections")
 
 
 class schedule_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, ' - Schedule Collection Rotations')
-
+        self.master = create_window(self, master, " - Schedule Collection Rotations")
 
 
 if __name__ == "__main__":
