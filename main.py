@@ -27,10 +27,7 @@ current_window = None
 
 SCREEN_WIDTH, SCREEN_HEIGHT = root.winfo_screenwidth(), root.winfo_screenheight()
 
-# assuming 768p is the smallest screen sizes people will have that are using this app,
-# here we're making the text bigger for anyone using a size bigger such as 1080p.
-if SCREEN_HEIGHT != 1024:
-    RATIO *= 1.4
+RATIO *= SCREEN_WIDTH / 1920
 
 # makes app fullscreen, but no way to exit from within it, need to alt-tab out or use keyboard shortcut
 # root.attributes('-fullscreen', True)
@@ -104,15 +101,15 @@ def create_window(self, master, extra="", title=("", 0)):
         )
         self.title_label.place(relwidth=1, relheight=1)
 
-    self.exit_button = tk.Button(
+    self.quit_button = tk.Button(
         current_window,
         text="Quit",
-        font=("Courier", int(38 * RATIO)),
+        font=("Courier", int(50 * RATIO)),
         command=lambda: root.destroy(),
         bg="#13ae4b",
         bd=5,
     )
-    self.exit_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
+    self.quit_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
     # if the user kills the window via the window manager,
     # exit the application.
@@ -123,7 +120,7 @@ def create_window(self, master, extra="", title=("", 0)):
 
 class main_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, "", ("Background Revolution", 38))
+        self.master = create_window(self, master, "", ("Background Revolution", 68))
 
         self.settings_frame = tk.Frame(self.master, bd=5, bg="#13ae4b")
         self.settings_frame.place(relwidth=0.1, relheight=0.15, rely=0.025, relx=0.875)
@@ -199,7 +196,7 @@ class custom_screen:
             self.preview_frame,
             text="<Preview Your Image Here>",
             bg="#13ae4b",
-            font=("Courier", int(48 * RATIO), "bold"),
+            font=("Courier", int(48 * RATIO), "bold"), #might need to change this font size value after the ratio change
             fg="#0f893b",
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
