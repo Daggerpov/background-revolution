@@ -129,7 +129,6 @@ class main_screen:
         self.settings_frame.place(relwidth=0.1, relheight=0.15, rely=0.025, relx=0.875)
 
         self.settings_pic = tk.PhotoImage(file="./images/settings_icon.png")
-        # self.settings_pic_new = self.submit_pic.subsample(2, 2)
 
         self.settings_pic_button = tk.Button(
             self.settings_frame,
@@ -138,6 +137,21 @@ class main_screen:
             command=lambda: main_screen.go_settings_screen(self),
         )
         self.settings_pic_button.place(relx=0, relheight=1, relwidth=1)
+
+        self.upload_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
+        self.upload_frame.place(relwidth=0.55, relheight=0.15, relx=0.425, rely=0.25, anchor="n")
+
+        self.browse_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
+        self.browse_frame.place(relwidth=0.55, relheight=0.15, relx=0.425, rely=0.475, anchor="n")
+
+        self.search_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
+        self.search_frame.place(relwidth=0.55, relheight=0.2, relx=0.425, rely=0.7, anchor="n")
+
+        self.collections_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
+        self.collections_frame.place(relwidth=0.25, relheight=0.375, relx=0.975, rely=0.437, anchor="e")
+
+        self.schedule_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
+        self.schedule_frame.place(relwidth=0.25, relheight=0.2, relx=0.975, rely=0.7, anchor="ne")
 
     def go_settings_screen(self):
         self.master.destroy()
