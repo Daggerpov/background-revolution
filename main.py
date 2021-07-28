@@ -138,6 +138,15 @@ class main_screen:
         self.upload_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.upload_frame.place(relwidth=0.55, relheight=0.15, relx=0.425, rely=0.25, anchor="n")
 
+        self.upload_button = tk.Button(
+            self.upload_frame,
+            text="Upload Custom",
+            font=("Courier", int(50 * RATIO)),
+            bg="#e5efde",
+            command=lambda: main_screen.go_custom_screen(self),
+        )
+        self.upload_button.place(relx=0, relheight=1, relwidth=1)
+
         self.browse_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.browse_frame.place(relwidth=0.55, relheight=0.15, relx=0.425, rely=0.475, anchor="n")
 
