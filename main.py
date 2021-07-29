@@ -137,8 +137,8 @@ class main_screen:
 
         self.upload_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.upload_frame.place(
-            relwidth=0.55, relheight=0.15, relx=0.425, rely=0.25, anchor="n"
-        )
+            relwidth=0.675, relheight=0.15, relx=0.025, rely=0.25, anchor="nw"
+            )
 
         self.upload_button = tk.Button(
             self.upload_frame,
@@ -151,23 +151,50 @@ class main_screen:
 
         self.browse_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.browse_frame.place(
-            relwidth=0.55, relheight=0.15, relx=0.425, rely=0.475, anchor="n"
+            relwidth=0.675, relheight=0.15, relx=0.025, rely=0.475, anchor="nw"
+            )
+
+        self.browse_button = tk.Button(
+            self.browse_frame,
+            text="Browse Preset",
+            font=("Courier", int(50 * RATIO)),
+            bg="#e5efde",
+            command=lambda: main_screen.go_preset_screen(self),
         )
+        self.browse_button.place(relx=0, relheight=1, relwidth=1)
 
         self.search_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.search_frame.place(
-            relwidth=0.55, relheight=0.2, relx=0.425, rely=0.7, anchor="n"
-        )
+            relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7, anchor="nw"
+            )
 
         self.collections_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.collections_frame.place(
             relwidth=0.25, relheight=0.375, relx=0.975, rely=0.437, anchor="e"
         )
 
+        self.collections_button = tk.Button(
+            self.collections_frame,
+            text="Manage\nCollections",
+            font=("Courier", int(50 * RATIO)),
+            bg="#e5efde",
+            command=lambda: main_screen.go_manage_screen(self),
+        )
+        self.collections_button.place(relx=0, relheight=1, relwidth=1)
+
         self.schedule_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.schedule_frame.place(
             relwidth=0.25, relheight=0.2, relx=0.975, rely=0.7, anchor="ne"
         )
+
+        self.schedule_button = tk.Button(
+            self.schedule_frame,
+            text="Schedule",
+            font=("Courier", int(50 * RATIO)),
+            bg="#e5efde",
+            command=lambda: main_screen.go_schedule_screen(self),
+        )
+        self.schedule_button.place(relx=0, relheight=1, relwidth=1)
 
     def go_settings_screen(self):
         self.master.destroy()
