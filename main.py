@@ -101,16 +101,6 @@ def create_window(self, master, extra="", title=("", 0)):
         )
         self.title_label.place(relwidth=1, relheight=1)
 
-    self.quit_button = tk.Button(
-        current_window,
-        text="Quit",
-        font=("Courier", int(50 * RATIO)),
-        command=lambda: root.destroy(),
-        bg="#13ae4b",
-        bd=5,
-    )
-    self.quit_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
-
     # if the user kills the window via the window manager,
     # exit the application.
     current_window.wm_protocol("WM_DELETE_WINDOW", root.destroy)
@@ -121,6 +111,16 @@ def create_window(self, master, extra="", title=("", 0)):
 class main_screen:
     def __init__(self, master):
         self.master = create_window(self, master, "", ("Background Revolution", 68))
+
+        self.quit_button = tk.Button(
+            self.master,
+            text="Quit",
+            font=("Courier", int(50 * RATIO)),
+            command=lambda: root.destroy(),
+            bg="#13ae4b",
+            bd=5,
+        )
+        self.quit_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
         self.settings_frame = tk.Frame(self.master, bd=5, bg="#13ae4b")
         self.settings_frame.place(relwidth=0.1, relheight=0.15, rely=0.025, relx=0.875)
@@ -136,19 +136,65 @@ class main_screen:
         self.settings_pic_button.place(relx=0, relheight=1, relwidth=1)
 
         self.upload_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
-        self.upload_frame.place(relwidth=0.55, relheight=0.15, relx=0.425, rely=0.25, anchor="n")
+        self.upload_frame.place(
+            relwidth=0.675, relheight=0.15, relx=0.025, rely=0.25, anchor="nw"
+            )
+
+        self.upload_button = tk.Button(
+            self.upload_frame,
+            text="Upload Custom",
+            font=("Courier", int(50 * RATIO)),
+            bg="#e5efde",
+            command=lambda: main_screen.go_custom_screen(self),
+        )
+        self.upload_button.place(relx=0, relheight=1, relwidth=1)
 
         self.browse_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
-        self.browse_frame.place(relwidth=0.55, relheight=0.15, relx=0.425, rely=0.475, anchor="n")
+        self.browse_frame.place(
+            relwidth=0.675, relheight=0.15, relx=0.025, rely=0.475, anchor="nw"
+            )
+
+        self.browse_button = tk.Button(
+            self.browse_frame,
+            text="Browse Preset",
+            font=("Courier", int(50 * RATIO)),
+            bg="#e5efde",
+            command=lambda: main_screen.go_preset_screen(self),
+        )
+        self.browse_button.place(relx=0, relheight=1, relwidth=1)
 
         self.search_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
-        self.search_frame.place(relwidth=0.55, relheight=0.2, relx=0.425, rely=0.7, anchor="n")
+        self.search_frame.place(
+            relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7, anchor="nw"
+            )
 
         self.collections_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
-        self.collections_frame.place(relwidth=0.25, relheight=0.375, relx=0.975, rely=0.437, anchor="e")
+        self.collections_frame.place(
+            relwidth=0.25, relheight=0.375, relx=0.975, rely=0.437, anchor="e"
+        )
+
+        self.collections_button = tk.Button(
+            self.collections_frame,
+            text="Manage\nCollections",
+            font=("Courier", int(50 * RATIO)),
+            bg="#e5efde",
+            command=lambda: main_screen.go_manage_screen(self),
+        )
+        self.collections_button.place(relx=0, relheight=1, relwidth=1)
 
         self.schedule_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
-        self.schedule_frame.place(relwidth=0.25, relheight=0.2, relx=0.975, rely=0.7, anchor="ne")
+        self.schedule_frame.place(
+            relwidth=0.25, relheight=0.2, relx=0.975, rely=0.7, anchor="ne"
+        )
+
+        self.schedule_button = tk.Button(
+            self.schedule_frame,
+            text="Schedule",
+            font=("Courier", int(50 * RATIO)),
+            bg="#e5efde",
+            command=lambda: main_screen.go_schedule_screen(self),
+        )
+        self.schedule_button.place(relx=0, relheight=1, relwidth=1)
 
     def go_settings_screen(self):
         self.master.destroy()
@@ -179,6 +225,7 @@ class settings_screen:
     def __init__(self, master):
         self.master = create_window(self, master, " - Settings")
 
+        
 
 class custom_screen:
     def __init__(self, master):
@@ -196,7 +243,11 @@ class custom_screen:
             self.preview_frame,
             text="<Preview Your Image Here>",
             bg="#13ae4b",
-            font=("Courier", int(48 * RATIO), "bold"), #might need to change this font size value after the ratio change
+            font=(
+                "Courier",
+                int(48 * RATIO),
+                "bold",
+            ),  # might need to change this font size value after the ratio change
             fg="#0f893b",
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
