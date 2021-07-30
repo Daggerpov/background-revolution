@@ -42,6 +42,11 @@ def main():
     root.mainloop()
 
 
+# def resource_path(relative_path):
+#     if hasattr(sys, '_MEIPASS'):
+#         return os.path.join(sys._MEIPASS, relative_path)
+#     return os.path.join(os.path.abspath("."), relative_path)
+
 class PlaceholderEntry(ttk.Entry):
     # initializing the arguments passed in
     def __init__(self, container, placeholder, validation, *args, **kwargs):
@@ -238,8 +243,6 @@ class main_screen:
 class settings_screen:
     def __init__(self, master):
         self.master = create_window(self, master, " - Settings", return_value = True)
-
-        
 
 class custom_screen:
     def __init__(self, master):
