@@ -75,8 +75,7 @@ class PlaceholderEntry(ttk.Entry):
             self.insert("0", self.placeholder)
             self["style"] = "Placeholder.TEntry"
 
-
-def create_window(self, master, extra="", title=("", 0)):
+def create_window(self, master, extra="", title=("", 0), return_value=False):
     current_window = tk.Toplevel(master)
 
     current_window.geometry(f"{SCREEN_WIDTH}x{SCREEN_HEIGHT}+0+0")
@@ -101,6 +100,17 @@ def create_window(self, master, extra="", title=("", 0)):
         )
         self.title_label.place(relwidth=1, relheight=1)
 
+    if return_value == True:
+        self.return_button = tk.Button(
+            current_window,
+            text="Back",
+            font=("Courier", int(50 * RATIO)),
+            bg="#13ae4b",
+            bd=5,
+            command=lambda: main_screen.go_main_screen(self), 
+        )
+        self.return_button.place(relwidth=0.1, relheight=0.15,relx=0.025, rely=0.025)
+
     # if the user kills the window via the window manager,
     # exit the application.
     current_window.wm_protocol("WM_DELETE_WINDOW", root.destroy)
@@ -110,7 +120,7 @@ def create_window(self, master, extra="", title=("", 0)):
 
 class main_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, "", ("Background Revolution", 68))
+        self.master = create_window(self, master, "", ("Background Revolution", 68), return_value = False)
 
         self.quit_button = tk.Button(
             self.master,
@@ -220,16 +230,20 @@ class main_screen:
         self.master.destroy()
         schedule_screen(root)
 
+    def go_main_screen(self):
+        self.master.destroy()
+        main_screen(root)
+
 
 class settings_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Settings")
+        self.master = create_window(self, master, " - Settings", return_value = True)
 
         
 
 class custom_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, "- Custom Collections")
+        self.master = create_window(self, master, "- Custom Collections", return_value = True)
 
         # fitting the output
         self.preview_frame = tk.Frame(
@@ -329,22 +343,22 @@ class custom_screen:
 
 class preset_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, "- Preset Collections")
+        self.master = create_window(self, master, "- Preset Collections", return_value = True)
 
 
 class search_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Search")
+        self.master = create_window(self, master, " - Search", return_value = True)
 
 
 class manage_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Manage Collections")
+        self.master = create_window(self, master, " - Manage Collections", return_value = True)
 
 
 class schedule_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Schedule Collection Rotations")
+        self.master = create_window(self, master, " - Schedule Collection Rotations", return_value = True)
 
 
 if __name__ == "__main__":
