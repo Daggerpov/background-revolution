@@ -47,6 +47,7 @@ def main():
 #         return os.path.join(sys._MEIPASS, relative_path)
 #     return os.path.join(os.path.abspath("."), relative_path)
 
+
 class PlaceholderEntry(ttk.Entry):
     # initializing the arguments passed in
     def __init__(self, container, placeholder, validation, *args, **kwargs):
@@ -80,6 +81,7 @@ class PlaceholderEntry(ttk.Entry):
             self.insert("0", self.placeholder)
             self["style"] = "Placeholder.TEntry"
 
+
 def create_window(self, master, extra="", title=("", 0), return_value=False):
     current_window = tk.Toplevel(master)
 
@@ -112,9 +114,9 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
             font=("Courier", int(50 * RATIO)),
             bg="#13ae4b",
             bd=5,
-            command=lambda: main_screen.go_main_screen(self), 
+            command=lambda: main_screen.go_main_screen(self),
         )
-        self.return_button.place(relwidth=0.1, relheight=0.15,relx=0.025, rely=0.025)
+        self.return_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
     # if the user kills the window via the window manager,
     # exit the application.
@@ -125,7 +127,9 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
 
 class main_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, "", ("Background Revolution", 68), return_value = False)
+        self.master = create_window(
+            self, master, "", ("Background Revolution", 68), return_value=False
+        )
 
         self.quit_button = tk.Button(
             self.master,
@@ -153,7 +157,7 @@ class main_screen:
         self.upload_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.upload_frame.place(
             relwidth=0.675, relheight=0.15, relx=0.025, rely=0.25, anchor="nw"
-            )
+        )
 
         self.upload_button = tk.Button(
             self.upload_frame,
@@ -167,7 +171,7 @@ class main_screen:
         self.browse_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.browse_frame.place(
             relwidth=0.675, relheight=0.15, relx=0.025, rely=0.475, anchor="nw"
-            )
+        )
 
         self.browse_button = tk.Button(
             self.browse_frame,
@@ -181,7 +185,7 @@ class main_screen:
         self.search_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.search_frame.place(
             relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7, anchor="nw"
-            )
+        )
 
         self.collections_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.collections_frame.place(
@@ -242,11 +246,45 @@ class main_screen:
 
 class settings_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Settings", return_value = True)
+        self.master = create_window(self, master, " - Settings", return_value=True)
+
 
 class custom_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, "- Custom Collections", return_value = True)
+        self.master = create_window(
+            self, master, "- Custom Collections", return_value=True
+        )
+
+        # buttons in top right corner
+        self.action_frame = tk.Frame(
+            self.master, highlightcolor="#13ae4b", bd=10, bg="#13ae4b"
+        )
+        self.action_frame.place(relwidth=0.175, relheight=0.15, rely=0.025, relx=0.8)
+
+        self.trashcan_pic = tk.PhotoImage(file="./images/trash.png")
+        self.trashcan_pic_button = tk.Button(
+            self.action_frame,
+            image=self.trashcan_pic,
+            bg="#e5efde",
+            command=lambda: custom_screen.trash_image_preview()
+        )
+        self.trashcan_pic_button.place(relx=0, relheight=0.67, relwidth=0.5)
+
+        self.save_to_button = tk.Button(
+            self.action_frame,
+            text="Save To",
+            bg="#e5efde",
+            command=lambda: custom_screen.save_images_to()
+        )
+        self.save_to_button.place(relx=0.5, relheight=0.67, relwidth=0.5)
+
+        self.toggle_select_button = tk.Button(
+            self.action_frame,
+            text="Toggle Select All",
+            bg="#e5efde",
+            command=lambda: custom_screen.toggle_select_all()
+        )
+        self.toggle_select_button.place(relx=0, rely=0.67, relheight=0.33, relwidth=1)
 
         # fitting the output
         self.preview_frame = tk.Frame(
@@ -258,7 +296,7 @@ class custom_screen:
 
         self.preview_text = tk.Label(
             self.preview_frame,
-            text="<Preview Your Image Here>",
+            text="<Preview Your Images Here>",
             bg="#13ae4b",
             font=(
                 "Courier",
@@ -270,34 +308,15 @@ class custom_screen:
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
 
         # button for file explorer
-        # I only want its command to run once, when it's clicked so I made a
-        # simple lambda that invokes the info_display function
-        self.button = tk.Button(
-            self.select_frame,
+
+        self.select_button = tk.Button(
+            self.master,
             text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
             font=("Courier", int(38 * RATIO)),
             bg="#e5efde",
             command=lambda: main_screen.retrieve_file(self.preview_frame),
         )
-        self.button.place(relx=0, relheight=1, relwidth=1)
-
-        # submit button to accept the file
-
-        self.submit_frame = tk.Frame(
-            self.master, highlightcolor="#13ae4b", bd=10, bg="#13ae4b"
-        )
-        self.submit_frame.place(relwidth=0.175, relheight=0.85, rely=0.075, relx=0.8)
-
-        self.submit_pic = tk.PhotoImage(file="./images/Arrow-Down-Green.png")
-        self.submit_pic_new = self.submit_pic.subsample(2, 2)
-
-        self.submit_pic_button = tk.Button(
-            self.submit_frame,
-            image=self.submit_pic_new,
-            bg="#e5efde",
-            command=lambda: main_screen.set_background_uploaded(self),
-        )
-        self.submit_pic_button.place(relx=0, relheight=1, relwidth=1)
+        self.select_button.place(relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
 
     def retrieve_file(preview_frame):
         a = "compatible image files"
@@ -336,9 +355,17 @@ class custom_screen:
             background_uploaded_label.configure(image=background_uploaded)
             background_uploaded_label.image = background_uploaded
 
-    def set_background_uploaded(self):
+    def trash_image_preview():
+        pass
+
+    def save_images_to():
+        pass
+    
+    def toggle_select_all():
+        pass
+
+    def set_background_uploaded():
         if win:
-            # self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
             ctypes.windll.user32.SystemParametersInfoW(20, 0, names_of_files, 0)
         else:
             app("Finder").desktop_picture.set(mactypes.File(names_of_files))
@@ -346,22 +373,28 @@ class custom_screen:
 
 class preset_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, "- Preset Collections", return_value = True)
+        self.master = create_window(
+            self, master, "- Preset Collections", return_value=True
+        )
 
 
 class search_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Search", return_value = True)
+        self.master = create_window(self, master, " - Search", return_value=True)
 
 
 class manage_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Manage Collections", return_value = True)
+        self.master = create_window(
+            self, master, " - Manage Collections", return_value=True
+        )
 
 
 class schedule_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Schedule Collection Rotations", return_value = True)
+        self.master = create_window(
+            self, master, " - Schedule Collection Rotations", return_value=True
+        )
 
 
 if __name__ == "__main__":
