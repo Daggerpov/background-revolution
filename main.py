@@ -337,8 +337,7 @@ class custom_screen:
             directory = "/Recents"
 
         names_of_files = list(
-            #filedialog.askopenfilenames
-            filedialog.askopenfiles(
+            filedialog.askopenfilenames(
                 initialdir=directory,
                 title="Select Image Files",
                 filetypes=(
