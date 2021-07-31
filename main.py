@@ -266,7 +266,7 @@ class custom_screen:
             self.action_frame,
             image=self.trashcan_pic,
             bg="#e5efde",
-            command=lambda: custom_screen.trash_image_preview()
+            command=lambda: custom_screen.trash_image_preview(),
         )
         self.trashcan_pic_button.place(relx=0, relheight=0.67, relwidth=0.5)
 
@@ -274,15 +274,23 @@ class custom_screen:
             self.action_frame,
             text="Save To",
             bg="#e5efde",
-            command=lambda: custom_screen.save_images_to()
+            font=(
+                "Courier",
+                int(20 * RATIO),
+            ),
+            command=lambda: custom_screen.save_images_to(),
         )
         self.save_to_button.place(relx=0.5, relheight=0.67, relwidth=0.5)
 
         self.toggle_select_button = tk.Button(
             self.action_frame,
             text="Toggle Select All",
+            font=(
+                "Courier",
+                int(20 * RATIO),
+            ),
             bg="#e5efde",
-            command=lambda: custom_screen.toggle_select_all()
+            command=lambda: custom_screen.toggle_select_all(),
         )
         self.toggle_select_button.place(relx=0, rely=0.67, relheight=0.33, relwidth=1)
 
@@ -291,7 +299,7 @@ class custom_screen:
             self.master, highlightcolor="#13ae4b", bd=10, bg="#13ae4b"
         )
         self.preview_frame.place(
-            relx=0.4, rely=0.225, relwidth=0.75, relheight=0.7, anchor="n"
+            relx=0.5, rely=0.225, relwidth=0.95, relheight=0.7, anchor="n"
         )
 
         self.preview_text = tk.Label(
@@ -300,7 +308,7 @@ class custom_screen:
             bg="#13ae4b",
             font=(
                 "Courier",
-                int(48 * RATIO),
+                int(80 * RATIO),
                 "bold",
             ),  # might need to change this font size value after the ratio change
             fg="#0f893b",
@@ -312,9 +320,9 @@ class custom_screen:
         self.select_button = tk.Button(
             self.master,
             text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
-            font=("Courier", int(38 * RATIO)),
+            font=("Courier", int(int(f"{'44' if win == True else '58'}") * RATIO)), #need to test this 58 value on mac
             bg="#e5efde",
-            command=lambda: main_screen.retrieve_file(self.preview_frame),
+            command=lambda: custom_screen.retrieve_file(self.preview_frame),
         )
         self.select_button.place(relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
 
@@ -329,7 +337,8 @@ class custom_screen:
             directory = "/Recents"
 
         names_of_files = list(
-            filedialog.askopenfilenames(
+            #filedialog.askopenfilenames
+            filedialog.askopenfiles(
                 initialdir=directory,
                 title="Select Image Files",
                 filetypes=(
@@ -360,7 +369,7 @@ class custom_screen:
 
     def save_images_to():
         pass
-    
+
     def toggle_select_all():
         pass
 
