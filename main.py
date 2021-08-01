@@ -336,7 +336,7 @@ class custom_screen:
                 "Courier",
                 int(80 * RATIO),
                 "bold",
-            ),  # might need to change this font size value after the ratio change
+            ), 
             fg="#0f893b",
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
