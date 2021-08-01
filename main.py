@@ -42,12 +42,6 @@ def main():
     root.mainloop()
 
 
-# def resource_path(relative_path):
-#     if hasattr(sys, '_MEIPASS'):
-#         return os.path.join(sys._MEIPASS, relative_path)
-#     return os.path.join(os.path.abspath("."), relative_path)
-
-
 class PlaceholderEntry(ttk.Entry):
     # initializing the arguments passed in
     def __init__(self, container, placeholder, validation, *args, **kwargs):
@@ -84,6 +78,7 @@ class PlaceholderEntry(ttk.Entry):
 
 def create_window(self, master, extra="", title=("", 0), return_value=False):
     current_window = tk.Toplevel(master)
+    current_window.state("zoomed")
 
     current_window.geometry(f"{SCREEN_WIDTH}x{SCREEN_HEIGHT}+0+0")
     current_window.title(f"Background Revolution{extra}")
@@ -244,7 +239,38 @@ class main_screen:
 
 class settings_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Settings", return_value=True)
+        self.master = create_window(
+            self,
+            master,
+            " - Settings",
+            title=("Settings & Info", 80),
+            return_value=True,
+        )
+
+        
+        
+        self.theme_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
+        self.theme_frame.place(
+            relx=0.5, rely=0.425, relwidth=0.95, relheight=0.15, anchor="n"
+        )
+
+        self.theme_title = tk.Label(
+            self.theme_frame,
+            text="Theme:",
+            bg="#13ae4b",
+            font=(
+                "Courier",
+                int(80 * RATIO),
+                "bold",
+            ),
+            fg="#c4dc34",
+            bd=5,
+        )
+        self.theme_title.place(
+            relx=0.125, rely=0, relwidth=0.3, relheight=1, anchor="n"
+        )
+
+        #add themes after in this frame to the right
 
 
 class custom_screen:
@@ -308,7 +334,7 @@ class custom_screen:
                 "Courier",
                 int(80 * RATIO),
                 "bold",
-            ),  # might need to change this font size value after the ratio change
+            ), 
             fg="#0f893b"
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
@@ -318,7 +344,10 @@ class custom_screen:
         self.select_button = tk.Button(
             self.master,
             text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
-            font=("Courier", int(int(f"{'44' if win == True else '58'}") * RATIO)), #need to test this 58 value on mac
+            font=(
+                "Courier",
+                int(int(f"{'44' if win == True else '58'}") * RATIO),
+            ),  # need to test this 58 value on mac
             bg="#e5efde",
             command=lambda: custom_screen.retrieve_file(self.preview_frame)
         )
