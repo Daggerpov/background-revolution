@@ -310,7 +310,7 @@ class custom_screen:
                 "Courier",
                 int(80 * RATIO),
                 "bold",
-            ),  # might need to change this font size value after the ratio change
+            ), 
             fg="#0f893b",
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
@@ -320,7 +320,7 @@ class custom_screen:
         self.select_button = tk.Button(
             self.master,
             text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
-            font=("Courier", int(int(f"{'44' if win == True else '58'}") * RATIO)), #need to test this 58 value on mac
+            font=("Courier", int(int(f"{'44' if win == True else '58'}") * RATIO)),
             bg="#e5efde",
             command=lambda: custom_screen.retrieve_file(self.preview_frame),
         )
