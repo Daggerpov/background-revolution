@@ -91,7 +91,7 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
         current_window, width=SCREEN_WIDTH, height=SCREEN_HEIGHT, bg="#66AFF5"
     )
     self.canvas.pack()
-    current_window.config(bg="#66AFF5")
+    current_window.config()
     current_window.resizable(width=False, height=False)
 
     if title != ("", 0):
@@ -103,7 +103,7 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
         self.title_label = tk.Label(
             self.title_frame,
             text=f"{title[0]}",
-            font=("Courier", int(title[1] * RATIO)),
+            font=("Courier", int(title[1] * RATIO))
         )
         self.title_label.place(relwidth=1, relheight=1)
 
@@ -114,7 +114,7 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
             font=("Courier", int(50 * RATIO)),
             bg="#13ae4b",
             bd=5,
-            command=lambda: main_screen.go_main_screen(self),
+            command=lambda: main_screen.go_main_screen(self)
         )
         self.return_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
@@ -137,26 +137,24 @@ class main_screen:
             font=("Courier", int(50 * RATIO)),
             command=lambda: root.destroy(),
             bg="#13ae4b",
-            bd=5,
+            bd=5
         )
         self.quit_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
-
-        self.settings_frame = tk.Frame(self.master, bd=5, bg="#13ae4b")
-        self.settings_frame.place(relwidth=0.1, relheight=0.15, rely=0.025, relx=0.875)
 
         self.settings_pic = tk.PhotoImage(file="./images/settings_icon.png")
 
         self.settings_pic_button = tk.Button(
-            self.settings_frame,
+            self.master,
             image=self.settings_pic,
-            bg="#e5efde",
-            command=lambda: main_screen.go_settings_screen(self),
+            bg="#13ae4b",
+            bd=5,
+            command=lambda: main_screen.go_settings_screen(self)
         )
-        self.settings_pic_button.place(relx=0, relheight=1, relwidth=1)
+        self.settings_pic_button.place(relx=0.875, rely=0.025, relheight=0.15, relwidth=0.1)
 
         self.upload_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.upload_frame.place(
-            relwidth=0.675, relheight=0.15, relx=0.025, rely=0.25, anchor="nw"
+            relwidth=0.675, relheight=0.15, relx=0.025, rely=0.25
         )
 
         self.upload_button = tk.Button(
@@ -164,13 +162,13 @@ class main_screen:
             text="Upload Custom",
             font=("Courier", int(50 * RATIO)),
             bg="#e5efde",
-            command=lambda: main_screen.go_custom_screen(self),
+            command=lambda: main_screen.go_custom_screen(self)
         )
         self.upload_button.place(relx=0, relheight=1, relwidth=1)
 
         self.browse_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.browse_frame.place(
-            relwidth=0.675, relheight=0.15, relx=0.025, rely=0.475, anchor="nw"
+            relwidth=0.675, relheight=0.15, relx=0.025, rely=0.475
         )
 
         self.browse_button = tk.Button(
@@ -178,13 +176,13 @@ class main_screen:
             text="Browse Preset",
             font=("Courier", int(50 * RATIO)),
             bg="#e5efde",
-            command=lambda: main_screen.go_preset_screen(self),
+            command=lambda: main_screen.go_preset_screen(self)
         )
         self.browse_button.place(relx=0, relheight=1, relwidth=1)
 
         self.search_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.search_frame.place(
-            relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7, anchor="nw"
+            relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7
         )
 
         self.collections_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
@@ -197,7 +195,7 @@ class main_screen:
             text="Manage\nCollections",
             font=("Courier", int(50 * RATIO)),
             bg="#e5efde",
-            command=lambda: main_screen.go_manage_screen(self),
+            command=lambda: main_screen.go_manage_screen(self)
         )
         self.collections_button.place(relx=0, relheight=1, relwidth=1)
 
@@ -211,7 +209,7 @@ class main_screen:
             text="Schedule",
             font=("Courier", int(50 * RATIO)),
             bg="#e5efde",
-            command=lambda: main_screen.go_schedule_screen(self),
+            command=lambda: main_screen.go_schedule_screen(self)
         )
         self.schedule_button.place(relx=0, relheight=1, relwidth=1)
 
@@ -257,7 +255,7 @@ class custom_screen:
 
         # buttons in top right corner
         self.action_frame = tk.Frame(
-            self.master, highlightcolor="#13ae4b", bd=10, bg="#13ae4b"
+            self.master, bd=10, bg="#13ae4b"
         )
         self.action_frame.place(relwidth=0.175, relheight=0.15, rely=0.025, relx=0.8)
 
@@ -266,7 +264,7 @@ class custom_screen:
             self.action_frame,
             image=self.trashcan_pic,
             bg="#e5efde",
-            command=lambda: custom_screen.trash_image_preview(),
+            command=lambda: custom_screen.trash_image_preview()
         )
         self.trashcan_pic_button.place(relx=0, relheight=0.67, relwidth=0.5)
 
@@ -278,7 +276,7 @@ class custom_screen:
                 "Courier",
                 int(20 * RATIO),
             ),
-            command=lambda: custom_screen.save_images_to(),
+            command=lambda: custom_screen.save_images_to()
         )
         self.save_to_button.place(relx=0.5, relheight=0.67, relwidth=0.5)
 
@@ -290,7 +288,7 @@ class custom_screen:
                 int(20 * RATIO),
             ),
             bg="#e5efde",
-            command=lambda: custom_screen.toggle_select_all(),
+            command=lambda: custom_screen.toggle_select_all()
         )
         self.toggle_select_button.place(relx=0, rely=0.67, relheight=0.33, relwidth=1)
 
@@ -311,7 +309,7 @@ class custom_screen:
                 int(80 * RATIO),
                 "bold",
             ),  # might need to change this font size value after the ratio change
-            fg="#0f893b",
+            fg="#0f893b"
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
 
@@ -322,7 +320,7 @@ class custom_screen:
             text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
             font=("Courier", int(int(f"{'44' if win == True else '58'}") * RATIO)), #need to test this 58 value on mac
             bg="#e5efde",
-            command=lambda: custom_screen.retrieve_file(self.preview_frame),
+            command=lambda: custom_screen.retrieve_file(self.preview_frame)
         )
         self.select_button.place(relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
 
@@ -350,8 +348,8 @@ class custom_screen:
                     (a, "*.eps"),
                     (a, "*.ai"),
                     (a, "*.indd"),
-                    (a, "*.raw"),
-                ),
+                    (a, "*.raw")
+                )
             )
         )
 
@@ -388,7 +386,9 @@ class preset_screen:
 
 class search_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Search", return_value=True)
+        self.master = create_window(
+            self, master, " - Search", return_value=True
+            )
 
 
 class manage_screen:
