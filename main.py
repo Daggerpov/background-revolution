@@ -147,24 +147,56 @@ class main_screen:
         )
         self.settings_pic_button.place(relx=0.875, rely=0.025, relheight=0.15, relwidth=0.1)
 
+        f = open("Settings.txt", "r")
+        if f.readline() == "True":
+            do_not_show = True
+        else:
+            do_not_show = False
+        f.close()
+
         self.upload_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
-        self.upload_frame.place(
-            relwidth=0.675, relheight=0.15, relx=0.025, rely=0.25
-        )
-
-        self.upload_button = tk.Button(
-            self.upload_frame,
-            text="Upload Custom",
-            font=("Courier", int(50 * RATIO)),
-            bg="#e5efde",
-            command=lambda: main_screen.go_custom_screen(self)
-        )
-        self.upload_button.place(relx=0, relheight=1, relwidth=1)
-
         self.browse_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
-        self.browse_frame.place(
-            relwidth=0.675, relheight=0.15, relx=0.025, rely=0.475
-        )
+
+        if do_not_show == True:
+
+            self.upload_frame.place(
+                relwidth=0.675, relheight=0.15, relx=0.025, rely=0.25
+            )
+
+            self.browse_frame.place(
+                relwidth=0.675, relheight=0.15, relx=0.025, rely=0.475
+            )
+
+        else:
+            
+            self.upload_frame.place(
+                relwidth=0.3, relheight=0.15, relx=0.025, rely=0.25
+            )
+
+            self.browse_frame.place(
+                relwidth=0.3, relheight=0.15, relx=0.025, rely=0.475
+            )
+
+            self.explanation_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
+            self.explanation_frame.place(
+                relwidth=0.35, relheight=0.375, relx=0.7, rely=0.25, anchor="ne"
+            )
+            self.explanation_title_frame = tk.Frame(self.explanation_frame, bg="#e5efde")
+            self.explanation_title_frame.place(
+                relwidth=1, relheight=0.7
+            )
+            self.explanation_do_not_show_button = tk.Button(
+                self.explanation_frame,
+                text="  Don't show again",
+                anchor="w",
+                font=("Courier", int(30 * RATIO)),
+                bg="#e5efde",
+                bd=5,
+                #command=lambda:
+            )
+            self.explanation_do_not_show_button.place(
+                relwidth=1, relheight=0.3, rely=0.7
+            )
 
         self.browse_button = tk.Button(
             self.browse_frame,
@@ -174,6 +206,15 @@ class main_screen:
             command=lambda: main_screen.go_preset_screen(self)
         )
         self.browse_button.place(relx=0, relheight=1, relwidth=1)
+
+        self.upload_button = tk.Button(
+            self.upload_frame,
+            text="Upload Custom",
+            font=("Courier", int(50 * RATIO)),
+            bg="#e5efde",
+            command=lambda: main_screen.go_custom_screen(self)
+        )
+        self.upload_button.place(relx=0, relheight=1, relwidth=1)
 
         self.search_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.search_frame.place(
