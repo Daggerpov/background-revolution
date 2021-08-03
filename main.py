@@ -1,4 +1,6 @@
-import os, sys, ctypes
+import os
+import sys
+import ctypes
 
 import tkinter as tk
 from tkinter import ttk, filedialog
@@ -40,12 +42,13 @@ def main():
     # overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
 
-def resizing(self, event=None):
-    if self.img:
-        iw, ih  = self.img.width, self.img.height
-        mw, mh  = self.master.winfo_width(), self.master.winfo_height()
-        
-        if iw>ih:
+
+def resizing(img, event=None):
+    if img:
+        iw, ih = img.width, img.height
+        mw, mh = SCREEN_WIDTH, SCREEN_HEIGHT
+
+        if iw > ih:
             ih = ih*(mw/iw)
             r = mh/ih if (ih/mh) > 1 else 1
             iw, ih = mw*r, ih*r
@@ -53,8 +56,13 @@ def resizing(self, event=None):
             iw = iw*(mh/ih)
             r = mw/iw if (iw/mw) > 1 else 1
             iw, ih = iw*r, mh*r
-            
-        self.p_img = ImageTk.PhotoImage(self.img.resize((int(iw*self.scale), int(ih*self.scale))))
+
+
+        return ImageTk.PhotoImage(img.resize(
+            (int(iw*1.0), int(ih*1.0))))
+
+        
+
 
 class PlaceholderEntry(ttk.Entry):
     # initializing the arguments passed in
@@ -125,7 +133,8 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
             bd=5,
             command=lambda: main_screen.go_main_screen(self)
         )
-        self.return_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
+        self.return_button.place(
+            relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
     # if the user kills the window via the window manager,
     # exit the application.
@@ -148,7 +157,8 @@ class main_screen:
             bg="#13ae4b",
             bd=5
         )
-        self.quit_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
+        self.quit_button.place(
+            relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
         self.settings_pic = tk.PhotoImage(file="./images/settings_icon.png")
 
@@ -159,7 +169,8 @@ class main_screen:
             bd=5,
             command=lambda: main_screen.go_settings_screen(self)
         )
-        self.settings_pic_button.place(relx=0.875, rely=0.025, relheight=0.15, relwidth=0.1)
+        self.settings_pic_button.place(
+            relx=0.875, rely=0.025, relheight=0.15, relwidth=0.1)
 
         f = open("Settings.txt", "r")
         if f.readline() == "True":
@@ -182,7 +193,7 @@ class main_screen:
             )
 
         else:
-            
+
             self.upload_frame.place(
                 relwidth=0.3, relheight=0.15, relx=0.025, rely=0.25
             )
@@ -195,7 +206,8 @@ class main_screen:
             self.explanation_frame.place(
                 relwidth=0.35, relheight=0.375, relx=0.7, rely=0.25, anchor="ne"
             )
-            self.explanation_title_frame = tk.Frame(self.explanation_frame, bg="#e5efde")
+            self.explanation_title_frame = tk.Frame(
+                self.explanation_frame, bg="#e5efde")
             self.explanation_title_frame.place(
                 relwidth=1, relheight=0.7
             )
@@ -206,7 +218,7 @@ class main_screen:
                 font=("Courier", int(30 * RATIO)),
                 bg="#e5efde",
                 bd=5,
-                #command=lambda:
+                # command=lambda:
             )
             self.explanation_do_not_show_button.place(
                 relwidth=1, relheight=0.3, rely=0.7
@@ -302,8 +314,6 @@ class settings_screen:
             return_value=True,
         )
 
-        
-        
         self.theme_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
         self.theme_frame.place(
             relx=0.5, rely=0.425, relwidth=0.95, relheight=0.15, anchor="n"
@@ -325,20 +335,20 @@ class settings_screen:
             relx=0.125, rely=0, relwidth=0.3, relheight=1, anchor="n"
         )
 
-        #add themes after in this frame to the right
+        # add themes after in this frame to the right
 
 
 class custom_screen:
-    def __init__(self, master, scale:float=1.0):
+    def __init__(self, master):
         self.master = create_window(
             self, master, "- Custom Collections", return_value=True
         )
-        self.scale = scale
         # buttons in top right corner
         self.action_frame = tk.Frame(
             self.master, bd=10, bg="#13ae4b"
         )
-        self.action_frame.place(relwidth=0.175, relheight=0.15, rely=0.025, relx=0.8)
+        self.action_frame.place(
+            relwidth=0.175, relheight=0.15, rely=0.025, relx=0.8)
 
         self.trashcan_pic = tk.PhotoImage(file="./images/trash.png")
         self.trashcan_pic_button = tk.Button(
@@ -371,7 +381,8 @@ class custom_screen:
             bg="#e5efde",
             command=lambda: custom_screen.toggle_select_all()
         )
-        self.toggle_select_button.place(relx=0, rely=0.67, relheight=0.33, relwidth=1)
+        self.toggle_select_button.place(
+            relx=0, rely=0.67, relheight=0.33, relwidth=1)
 
         # fitting the output
         self.preview_frame = tk.Frame(
@@ -389,7 +400,7 @@ class custom_screen:
                 "Courier",
                 int(80 * RATIO),
                 "bold",
-            ), 
+            ),
             fg="#0f893b"
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
@@ -404,9 +415,11 @@ class custom_screen:
                 int(int(f"{'44' if win == True else '58'}") * RATIO),
             ),  # need to test this 58 value on mac
             bg="#e5efde",
-            command=lambda: custom_screen.retrieve_file(self, self.preview_frame)
+            command=lambda: custom_screen.retrieve_file(
+                self, self.preview_frame)
         )
-        self.select_button.place(relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
+        self.select_button.place(
+            relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
 
     def retrieve_file(self, preview_frame):
         a = "compatible image files"
@@ -437,21 +450,23 @@ class custom_screen:
             )
         )
 
-        try:
-            self.img = Image.open(str(names_of_files[0]))
-            resizing(self)
-            background_uploaded_label = tk.Label(preview_frame, image=self.p_img)
-            background_uploaded_label.place(relheight=1, relwidth=1)
-            
-        except:
-            self.preview_text.text, self.preview_text.font = \
-            "Failed to Upload/Preview Image(s)", \
-            "Courier",
-            int(68 * RATIO),
-            "bold"
+        #try:
+        self.background_uploaded_img = Image.open(str(names_of_files[0]))
+        self.background_uploaded_label = tk.Label(
+            self.preview_frame)
+        self.background_uploaded_label.place(relheight=1, relwidth=1)
+        
+        self.background_uploaded_img = resizing(self.background_uploaded_img) #remove 'resized' in variable name if works
+        self.background_uploaded_label.configure(image=self.background_uploaded_img)
         
 
-        
+        #except:
+        # self.preview_text.text, self.preview_text.font = \
+        #     "Failed to Upload/Preview Image(s)", \
+        #     "Courier",
+        # int(68 * RATIO),
+        # "bold"
+
     def trash_image_preview():
         pass
 
@@ -463,7 +478,8 @@ class custom_screen:
 
     def set_background_uploaded():
         if win:
-            ctypes.windll.user32.SystemParametersInfoW(20, 0, names_of_files, 0)
+            ctypes.windll.user32.SystemParametersInfoW(
+                20, 0, names_of_files, 0)
         else:
             app("Finder").desktop_picture.set(mactypes.File(names_of_files))
 
@@ -479,7 +495,7 @@ class search_screen:
     def __init__(self, master):
         self.master = create_window(
             self, master, " - Search", return_value=True
-            )
+        )
 
 
 class manage_screen:
