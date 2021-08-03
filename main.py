@@ -40,8 +40,21 @@ def main():
     # overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
 
-def resize_image(img):
-    pass
+def resizing(self, event=None):
+    if self.img:
+        iw, ih  = self.img.width, self.img.height
+        mw, mh  = self.master.winfo_width(), self.master.winfo_height()
+        
+        if iw>ih:
+            ih = ih*(mw/iw)
+            r = mh/ih if (ih/mh) > 1 else 1
+            iw, ih = mw*r, ih*r
+        else:
+            iw = iw*(mh/ih)
+            r = mw/iw if (iw/mw) > 1 else 1
+            iw, ih = iw*r, mh*r
+            
+        self.p_img = ImageTk.PhotoImage(self.img.resize((int(iw*self.scale), int(ih*self.scale))))
 
 class PlaceholderEntry(ttk.Entry):
     # initializing the arguments passed in
@@ -424,31 +437,21 @@ class custom_screen:
             )
         )
 
-        if names_of_files != "":
+        try:
             self.img = Image.open(str(names_of_files[0]))
-            self.resizing()
-            background_uploaded_label = tk.Label(preview_frame)
+            resizing(self)
+            background_uploaded_label = tk.Label(preview_frame, image=self.p_img)
             background_uploaded_label.place(relheight=1, relwidth=1)
-
-            background_uploaded_label.configure(image=self.p_img)
             
+        except:
+            self.preview_text.text, self.preview_text.font = \
+            "Failed to Upload/Preview Image(s)", \
+            "Courier",
+            int(68 * RATIO),
+            "bold"
+        
 
-    def resizing(self, event=None):
-        if self.img:
-            iw, ih  = self.img.width, self.img.height
-            mw, mh  = self.master.winfo_width(), self.master.winfo_height()
-            
-            if iw>ih:
-                ih = ih*(mw/iw)
-                r = mh/ih if (ih/mh) > 1 else 1
-                iw, ih = mw*r, ih*r
-            else:
-                iw = iw*(mh/ih)
-                r = mw/iw if (iw/mw) > 1 else 1
-                iw, ih = iw*r, mh*r
-                
-            self.p_img = ImageTk.PhotoImage(self.img.resize((int(iw*self.scale), int(ih*self.scale))))
-
+        
     def trash_image_preview():
         pass
 
