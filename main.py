@@ -14,7 +14,6 @@ if sys.platform == "win32":
     RATIO = 1
 elif sys.platform == "darwin":
     from appscript import app, mactypes
-
     win, mac = False, True
     RATIO = 1.375
 else:
@@ -41,6 +40,8 @@ def main():
     # overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
 
+def resize_image(img):
+    pass
 
 class PlaceholderEntry(ttk.Entry):
     # initializing the arguments passed in
@@ -315,11 +316,11 @@ class settings_screen:
 
 
 class custom_screen:
-    def __init__(self, master):
+    def __init__(self, master, scale:float=1.0):
         self.master = create_window(
             self, master, "- Custom Collections", return_value=True
         )
-
+        self.scale = scale
         # buttons in top right corner
         self.action_frame = tk.Frame(
             self.master, bd=10, bg="#13ae4b"
@@ -390,11 +391,11 @@ class custom_screen:
                 int(int(f"{'44' if win == True else '58'}") * RATIO),
             ),  # need to test this 58 value on mac
             bg="#e5efde",
-            command=lambda: custom_screen.retrieve_file(self.preview_frame)
+            command=lambda: custom_screen.retrieve_file(self, self.preview_frame)
         )
         self.select_button.place(relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
 
-    def retrieve_file(preview_frame):
+    def retrieve_file(self, preview_frame):
         a = "compatible image files"
 
         global names_of_files
@@ -424,12 +425,29 @@ class custom_screen:
         )
 
         if names_of_files != "":
-            background_uploaded = ImageTk.PhotoImage(Image.open(str(names_of_files[0])))
+            self.img = Image.open(str(names_of_files[0]))
+            self.resizing()
             background_uploaded_label = tk.Label(preview_frame)
             background_uploaded_label.place(relheight=1, relwidth=1)
 
-            background_uploaded_label.configure(image=background_uploaded)
-            background_uploaded_label.image = background_uploaded
+            background_uploaded_label.configure(image=self.p_img)
+            
+
+    def resizing(self, event=None):
+        if self.img:
+            iw, ih  = self.img.width, self.img.height
+            mw, mh  = self.master.winfo_width(), self.master.winfo_height()
+            
+            if iw>ih:
+                ih = ih*(mw/iw)
+                r = mh/ih if (ih/mh) > 1 else 1
+                iw, ih = mw*r, ih*r
+            else:
+                iw = iw*(mh/ih)
+                r = mw/iw if (iw/mw) > 1 else 1
+                iw, ih = iw*r, mh*r
+                
+            self.p_img = ImageTk.PhotoImage(self.img.resize((int(iw*self.scale), int(ih*self.scale))))
 
     def trash_image_preview():
         pass
