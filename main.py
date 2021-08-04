@@ -42,11 +42,15 @@ def main():
     # overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
 
-
-def resizing(img, event=None):
+def resizing_uploaded_images(img, container=''):
     if img:
         iw, ih = img.width, img.height
-        mw, mh = SCREEN_WIDTH, SCREEN_HEIGHT
+        scale = SCREEN_WIDTH / iw
+        if container == '':
+            mw, mh = SCREEN_WIDTH, SCREEN_HEIGHT
+        else:
+            container.update()
+            return ImageTk.PhotoImage(img.resize((int(container.winfo_width() * 0.9), int(container.winfo_height() * 0.9))))
 
         if iw > ih:
             ih = ih*(mw/iw)
@@ -59,9 +63,7 @@ def resizing(img, event=None):
 
 
         return ImageTk.PhotoImage(img.resize(
-            (int(iw*1.0), int(ih*1.0))))
-
-        
+            (int(iw*scale), int(ih*scale))))
 
 
 class PlaceholderEntry(ttk.Entry):
@@ -160,17 +162,18 @@ class main_screen:
         self.quit_button.place(
             relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
-        self.settings_pic = tk.PhotoImage(file="./images/settings_icon.png")
-
+        #self.settings_pic = tk.PhotoImage(file="./images/settings_icon.png")
         self.settings_pic_button = tk.Button(
             self.master,
-            image=self.settings_pic,
             bg="#13ae4b",
             bd=5,
             command=lambda: main_screen.go_settings_screen(self)
         )
         self.settings_pic_button.place(
             relx=0.875, rely=0.025, relheight=0.15, relwidth=0.1)
+
+        self.settings_pic = resizing_uploaded_images(Image.open("./images/settings_icon.png"), self.settings_pic_button) 
+        self.settings_pic_button.configure(image=self.settings_pic)
 
         f = open("Settings.txt", "r")
         if f.readline() == "True":
@@ -350,14 +353,17 @@ class custom_screen:
         self.action_frame.place(
             relwidth=0.175, relheight=0.15, rely=0.025, relx=0.8)
 
-        self.trashcan_pic = tk.PhotoImage(file="./images/trash.png")
         self.trashcan_pic_button = tk.Button(
             self.action_frame,
-            image=self.trashcan_pic,
             bg="#e5efde",
             command=lambda: custom_screen.trash_image_preview()
         )
         self.trashcan_pic_button.place(relx=0, relheight=0.67, relwidth=0.5)
+
+        self.trashcan_pic = resizing_uploaded_images(Image.open("./images/trash.png"), self.trashcan_pic_button) 
+        self.trashcan_pic_button.configure(image=self.trashcan_pic)
+
+        #note to self: need to apply to trashcan, resizing
 
         self.save_to_button = tk.Button(
             self.action_frame,
@@ -415,6 +421,7 @@ class custom_screen:
                 int(int(f"{'44' if win == True else '58'}") * RATIO),
             ),  # need to test this 58 value on mac
             bg="#e5efde",
+            bd=5,
             command=lambda: custom_screen.retrieve_file(
                 self, self.preview_frame)
         )
@@ -451,13 +458,12 @@ class custom_screen:
         )
 
         #try:
-        self.background_uploaded_img = Image.open(str(names_of_files[0]))
+        self.background_uploaded_img = resizing_uploaded_images(Image.open(str(names_of_files[0]))) 
         self.background_uploaded_label = tk.Label(
-            self.preview_frame)
+            self.preview_frame, image=self.background_uploaded_img)
         self.background_uploaded_label.place(relheight=1, relwidth=1)
         
-        self.background_uploaded_img = resizing(self.background_uploaded_img) #remove 'resized' in variable name if works
-        self.background_uploaded_label.configure(image=self.background_uploaded_img)
+        
         
 
         #except:
