@@ -30,6 +30,7 @@ SCREEN_WIDTH, SCREEN_HEIGHT = root.winfo_screenwidth(), root.winfo_screenheight(
 
 RATIO *= SCREEN_WIDTH / 1920
 
+
 def main():
     # setting the current screen to start menu
     # app = main_screen(root)
@@ -38,28 +39,17 @@ def main():
     # overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
 
-def resizing_uploaded_images(img, container=''):
-    if img:
-        iw, ih = img.width, img.height
-        scale = SCREEN_WIDTH / iw
-        if container == '':
-            mw, mh = SCREEN_WIDTH, SCREEN_HEIGHT
-        else:
-            container.update()
-            return ImageTk.PhotoImage(img.resize((int(container.winfo_width() * 0.9), int(container.winfo_height() * 0.9))))
 
-        if iw > ih:
-            ih = ih*(mw/iw)
-            r = mh/ih if (ih/mh) > 1 else 1
-            iw, ih = mw*r, ih*r
-        else:
-            iw = iw*(mh/ih)
-            r = mw/iw if (iw/mw) > 1 else 1
-            iw, ih = iw*r, mh*r
-
-
+def fit_image(img, container, full=False):
+    container.update()
+    if full == True:
         return ImageTk.PhotoImage(img.resize(
-            (int(iw*scale), int(ih*scale))))
+            (container.winfo_width(), container.winfo_height()), Image.ANTIALIAS))
+    else:
+        return ImageTk.PhotoImage(img.resize
+                                  ((int(container.winfo_width() * 0.9),
+                                    int(container.winfo_height() * 0.9)), Image.ANTIALIAS))  # need to move this after the iw, ih stuff?
+
 
 def write_default_settings():
     with open("Settings.txt", 'w') as settings_file:
@@ -101,7 +91,7 @@ class PlaceholderEntry(ttk.Entry):
 
 
 def create_window(self, master, extra="", title=("", 0), return_value=False):
-    #zooms into the window, since before it wouldn't always center correctly with the application's borders
+    # zooms into the window, since before it wouldn't always center correctly with the application's borders
     current_window = tk.Toplevel(master)
     current_window.state("zoomed")
 
@@ -173,7 +163,8 @@ class main_screen:
         self.settings_pic_button.place(
             relx=0.875, rely=0.025, relheight=0.15, relwidth=0.1)
 
-        self.settings_pic = resizing_uploaded_images(Image.open("./images/settings_icon.png"), self.settings_pic_button) 
+        self.settings_pic = fit_image(Image.open(
+            "./images/settings_icon.png"), self.settings_pic_button)
         self.settings_pic_button.configure(image=self.settings_pic)
 
         with open("Settings.txt") as settings_file:
@@ -218,19 +209,17 @@ class main_screen:
                 relwidth=1, relheight=0.7
             )
             if do_not_show == False:
-                
+
                 explanation_reset_text = "This is a program written by Daniel and Stephen that will\nhelp you change your computer backgrounds! There are many\nfeatures and functions to help you. The cog will take you\nto a settings page, 'Upload Custom' allows you to use your\n own images, 'Browse Preset' allows you to use preset\n options, 'Search' allows you search for images online,\n'Manage Collections' is to manage the image colections\n you've made, and 'Schedule' will help you schedule\n your image rotation"
                 explanation_reset_font = ("Courier", int(14 * RATIO))
                 explanation_reset_command = main_screen.do_not_show_clicked()
                 self.explanation_reset_button_text = "Don't show again"
 
-                
             elif do_not_show == 'needs reset':
                 explanation_reset_text = "It seems the settings \nhave been edited and can \nno longer be read from."
                 explanation_reset_font = ("Courier", int(30 * RATIO))
                 explanation_reset_command = write_default_settings()
                 self.explanation_reset_button_text = 'Reset Settings'
-
 
             self.explantion_text = tk.Label(
                 self.explanation_title_frame,
@@ -338,6 +327,7 @@ class main_screen:
             settings_data = "do_not_show: True"
             settings_file.writelines(settings_data)
 
+
 class settings_screen:
     def __init__(self, master):
         self.master = create_window(
@@ -391,10 +381,11 @@ class custom_screen:
         )
         self.trashcan_pic_button.place(relx=0, relheight=0.67, relwidth=0.5)
 
-        self.trashcan_pic = resizing_uploaded_images(Image.open("./images/trash.png"), self.trashcan_pic_button) 
+        self.trashcan_pic = fit_image(Image.open(
+            "./images/trash.png"), self.trashcan_pic_button)
         self.trashcan_pic_button.configure(image=self.trashcan_pic)
 
-        #note to self: need to apply to trashcan, resizing
+        # note to self: need to apply to trashcan, resizing
 
         self.save_to_button = tk.Button(
             self.action_frame,
@@ -488,11 +479,12 @@ class custom_screen:
         )
 
         try:
-            self.background_uploaded_img = resizing_uploaded_images(Image.open(str(names_of_files[0]))) 
+            self.background_uploaded_img = fit_image(Image.open(
+                str(names_of_files[0])), self.preview_frame, full=True)
             self.background_uploaded_label = tk.Label(
                 self.preview_frame, image=self.background_uploaded_img)
             self.background_uploaded_label.place(relheight=1, relwidth=1)
-        
+
         except:
             self.preview_text.text, self.preview_text.font = \
                 "Failed to Upload/Preview Image(s)", \
