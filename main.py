@@ -21,7 +21,7 @@ elif sys.platform == "darwin":
 else:
     exit()
 
-# initializing module
+# initializing module, hiding root window
 root = tk.Tk()
 root.withdraw()
 current_window = None
@@ -29,10 +29,6 @@ current_window = None
 SCREEN_WIDTH, SCREEN_HEIGHT = root.winfo_screenwidth(), root.winfo_screenheight()
 
 RATIO *= SCREEN_WIDTH / 1920
-
-# makes app fullscreen, but no way to exit from within it, need to alt-tab out or use keyboard shortcut
-# root.attributes('-fullscreen', True)
-
 
 def main():
     # setting the current screen to start menu
@@ -64,6 +60,10 @@ def resizing_uploaded_images(img, container=''):
 
         return ImageTk.PhotoImage(img.resize(
             (int(iw*scale), int(ih*scale))))
+
+def write_default_settings():
+    with open("Settings.txt", 'w') as settings_file:
+        settings_file.write("do_not_show: False")
 
 
 class PlaceholderEntry(ttk.Entry):
@@ -101,6 +101,7 @@ class PlaceholderEntry(ttk.Entry):
 
 
 def create_window(self, master, extra="", title=("", 0), return_value=False):
+    #zooms into the window, since before it wouldn't always center correctly with the application's borders
     current_window = tk.Toplevel(master)
     current_window.state("zoomed")
 
@@ -175,19 +176,22 @@ class main_screen:
         self.settings_pic = resizing_uploaded_images(Image.open("./images/settings_icon.png"), self.settings_pic_button) 
         self.settings_pic_button.configure(image=self.settings_pic)
 
-        f = open("Settings.txt", "r")
-        settings_data = f.readlines()
-        if settings_data[0] == "True\n":
-            do_not_show = True
-        else:
-            do_not_show = False
-        f.close()
+        with open("Settings.txt") as settings_file:
+            settings_data = settings_file.readlines()
+            if settings_data == []:
+                write_default_settings()
+                do_not_show = False
+            elif settings_data[0] == "do_not_show: True":
+                do_not_show = True
+            elif settings_data[0] == 'do_not_show: False':
+                do_not_show = False
+            else:
+                do_not_show = "needs reset"
 
         self.upload_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.browse_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
 
         if do_not_show == True:
-
             self.upload_frame.place(
                 relwidth=0.675, relheight=0.15, relx=0.025, rely=0.25
             )
@@ -195,9 +199,7 @@ class main_screen:
             self.browse_frame.place(
                 relwidth=0.675, relheight=0.15, relx=0.025, rely=0.475
             )
-
         else:
-
             self.upload_frame.place(
                 relwidth=0.3, relheight=0.15, relx=0.025, rely=0.25
             )
@@ -215,23 +217,38 @@ class main_screen:
             self.explanation_title_frame.place(
                 relwidth=1, relheight=0.7
             )
+            if do_not_show == False:
+                
+                explanation_reset_text = "This is a program written by Daniel and Stephen that will\nhelp you change your computer backgrounds! There are many\nfeatures and functions to help you. The cog will take you\nto a settings page, 'Upload Custom' allows you to use your\n own images, 'Browse Preset' allows you to use preset\n options, 'Search' allows you search for images online,\n'Manage Collections' is to manage the image colections\n you've made, and 'Schedule' will help you schedule\n your image rotation"
+                explanation_reset_font = ("Courier", int(14 * RATIO))
+                explanation_reset_command = main_screen.do_not_show_clicked()
+                self.explanation_reset_button_text = "Don't show again"
+
+                
+            elif do_not_show == 'needs reset':
+                explanation_reset_text = "It seems the settings \nhave been edited and can \nno longer be read from."
+                explanation_reset_font = ("Courier", int(30 * RATIO))
+                explanation_reset_command = write_default_settings()
+                self.explanation_reset_button_text = 'Reset Settings'
+
+
             self.explantion_text = tk.Label(
                 self.explanation_title_frame,
                 bg="#e5efde",
-                text="This is a program written by Daniel and Stephen that will\nhelp you change your computer backgrounds! There are many\nfeatures and functions to help you. The cog will take you\nto a settings page, 'Upload Custom' allows you to use your\n own images, 'Browse Preset' allows you to use preset\n options, 'Search' allows you search for images online,\n'Manage Collections' is to manage the image colections\n you've made, and 'Schedule' will help you schedule\n your image rotation.",
-                font=("Courier", int(14 * RATIO))
+                text=explanation_reset_text,
+                font=explanation_reset_font
             )
             self.explantion_text.place(
-                relx=0.01, rely=0.05, anchor="nw"
+                rely=0.5, relx=0.5, anchor='center'
             )
             self.explanation_do_not_show_button = tk.Button(
                 self.explanation_frame,
-                text="  Don't show again",
-                anchor="w",
+                text=self.explanation_reset_button_text,
+                anchor="center",
                 font=("Courier", int(30 * RATIO)),
                 bg="#e5efde",
                 bd=5,
-                command=lambda: main_screen.do_not_show_clicked()
+                command=lambda: explanation_reset_command
             )
             self.explanation_do_not_show_button.place(
                 relwidth=1, relheight=0.3, rely=0.7
@@ -317,14 +334,9 @@ class main_screen:
         main_screen(root)
 
     def do_not_show_clicked():
-        f = open("Settings.txt", "r")
-        settings_data = f.readlines()
-        settings_data[0] = "True\n"
-
-        f = open("Settings.txt", "w")
-        f.writelines(settings_data)
-        f.close()
-
+        with open("Settings.txt", 'w') as settings_file:
+            settings_data = "do_not_show: True"
+            settings_file.writelines(settings_data)
 
 class settings_screen:
     def __init__(self, master):
