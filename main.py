@@ -176,7 +176,8 @@ class main_screen:
         self.settings_pic_button.configure(image=self.settings_pic)
 
         f = open("Settings.txt", "r")
-        if f.readline() == "True":
+        settings_data = f.readlines()
+        if settings_data[0] == "True\n":
             do_not_show = True
         else:
             do_not_show = False
@@ -214,6 +215,15 @@ class main_screen:
             self.explanation_title_frame.place(
                 relwidth=1, relheight=0.7
             )
+            self.explantion_text = tk.Label(
+                self.explanation_title_frame,
+                bg="#e5efde",
+                text="This is a program written by Daniel and Stephen that will\nhelp you change your computer backgrounds! There are many\nfeatures and functions to help you. The cog will take you\nto a settings page, 'Upload Custom' allows you to use your\n own images, 'Browse Preset' allows you to use preset\n options, 'Search' allows you search for images online,\n'Manage Collections' is to manage the image colections\n you've made, and 'Schedule' will help you schedule\n your image rotation.",
+                font=("Courier", int(14 * RATIO))
+            )
+            self.explantion_text.place(
+                relx=0.01, rely=0.05, anchor="nw"
+            )
             self.explanation_do_not_show_button = tk.Button(
                 self.explanation_frame,
                 text="  Don't show again",
@@ -221,7 +231,7 @@ class main_screen:
                 font=("Courier", int(30 * RATIO)),
                 bg="#e5efde",
                 bd=5,
-                # command=lambda:
+                command=lambda: main_screen.do_not_show_clicked()
             )
             self.explanation_do_not_show_button.place(
                 relwidth=1, relheight=0.3, rely=0.7
@@ -305,6 +315,15 @@ class main_screen:
     def go_main_screen(self):
         self.master.destroy()
         main_screen(root)
+
+    def do_not_show_clicked():
+        f = open("Settings.txt", "r")
+        settings_data = f.readlines()
+        settings_data[0] = "True\n"
+
+        f = open("Settings.txt", "w")
+        f.writelines(settings_data)
+        f.close()
 
 
 class settings_screen:
