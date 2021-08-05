@@ -441,13 +441,12 @@ class custom_screen:
             ),  # need to test this 58 value on mac
             bg="#e5efde",
             bd=5,
-            command=lambda: custom_screen.retrieve_file(
-                self, self.preview_frame)
+            command=lambda: custom_screen.retrieve_file(self)
         )
         self.select_button.place(
             relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
 
-    def retrieve_file(self, preview_frame):
+    def retrieve_file(self):
         a = "compatible image files"
 
         global names_of_files
@@ -476,21 +475,18 @@ class custom_screen:
             )
         )
 
-        #try:
-        self.background_uploaded_img = resizing_uploaded_images(Image.open(str(names_of_files[0]))) 
-        self.background_uploaded_label = tk.Label(
-            self.preview_frame, image=self.background_uploaded_img)
-        self.background_uploaded_label.place(relheight=1, relwidth=1)
+        try:
+            self.background_uploaded_img = resizing_uploaded_images(Image.open(str(names_of_files[0]))) 
+            self.background_uploaded_label = tk.Label(
+                self.preview_frame, image=self.background_uploaded_img)
+            self.background_uploaded_label.place(relheight=1, relwidth=1)
         
-        
-        
-
-        #except:
-        # self.preview_text.text, self.preview_text.font = \
-        #     "Failed to Upload/Preview Image(s)", \
-        #     "Courier",
-        # int(68 * RATIO),
-        # "bold"
+        except:
+            self.preview_text.text, self.preview_text.font = \
+                "Failed to Upload/Preview Image(s)", \
+                "Courier",
+            int(68 * RATIO),
+            "bold"
 
     def trash_image_preview():
         pass
