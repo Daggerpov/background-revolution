@@ -5,7 +5,6 @@ import ctypes
 import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
-import time
 
 # determining OS of user
 # ratio is to compensate for text size differential between Windows and macOS
@@ -48,7 +47,7 @@ def fit_image(img, container, full=False):
     else:
         return ImageTk.PhotoImage(img.resize
                                   ((int(container.winfo_width() * 0.9),
-                                    int(container.winfo_height() * 0.9)), Image.ANTIALIAS))  # need to move this after the iw, ih stuff?
+                                    int(container.winfo_height() * 0.9)), Image.ANTIALIAS))
 
 
 def write_default_settings():
@@ -153,7 +152,6 @@ class main_screen:
         self.quit_button.place(
             relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
-        #self.settings_pic = tk.PhotoImage(file="./images/settings_icon.png")
         self.settings_pic_button = tk.Button(
             self.master,
             bg="#13ae4b",
@@ -168,13 +166,13 @@ class main_screen:
         self.settings_pic_button.configure(image=self.settings_pic)
 
         with open("Settings.txt") as settings_file:
-            settings_data = settings_file.readlines()
+            settings_data = settings_file.readlines()[0]
             if settings_data == []:
                 write_default_settings()
                 do_not_show = False
-            elif settings_data[0] == "do_not_show: True":
+            elif settings_data == "do_not_show: True":
                 do_not_show = True
-            elif settings_data[0] == 'do_not_show: False':
+            elif settings_data == 'do_not_show: False':
                 do_not_show = False
             else:
                 do_not_show = "needs reset"
@@ -367,6 +365,21 @@ class custom_screen:
         self.master = create_window(
             self, master, "- Custom Collections", return_value=True
         )
+
+        self.select_button = tk.Button(
+            self.master,
+            text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
+            font=(
+                "Courier",
+                int(int(f"{'44' if win == True else '58'}") * RATIO),
+            ),
+            bg="#e5efde",
+            bd=5,
+            command=lambda: custom_screen.retrieve_file(self)
+        )
+        self.select_button.place(
+            relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
+
         # buttons in top right corner
         self.action_frame = tk.Frame(
             self.master, bd=10, bg="#13ae4b"
@@ -384,8 +397,6 @@ class custom_screen:
         self.trashcan_pic = fit_image(Image.open(
             "./images/trash.png"), self.trashcan_pic_button)
         self.trashcan_pic_button.configure(image=self.trashcan_pic)
-
-        # note to self: need to apply to trashcan, resizing
 
         self.save_to_button = tk.Button(
             self.action_frame,
@@ -433,22 +444,6 @@ class custom_screen:
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
 
-        # button for file explorer
-
-        self.select_button = tk.Button(
-            self.master,
-            text=f"Select Images from {'File Explorer' if win == True else 'Files'}",
-            font=(
-                "Courier",
-                int(int(f"{'44' if win == True else '58'}") * RATIO),
-            ),  # need to test this 58 value on mac
-            bg="#e5efde",
-            bd=5,
-            command=lambda: custom_screen.retrieve_file(self)
-        )
-        self.select_button.place(
-            relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
-
     def retrieve_file(self):
         a = "compatible image files"
 
@@ -459,38 +454,68 @@ class custom_screen:
         else:
             directory = "/Recents"
 
-        names_of_files = list(
-            filedialog.askopenfilenames(
-                initialdir=directory,
-                title="Select Image Files",
-                filetypes=(
-                    (a, "*.png"),
-                    (a, "*.jpeg"),
-                    (a, "*.jpg*"),
-                    (a, "*.gif"),
-                    (a, "*.tiff"),
-                    (a, "*.psd"),
-                    (a, "*.eps"),
-                    (a, "*.ai"),
-                    (a, "*.indd"),
-                    (a, "*.raw")
-                )
+        names_of_files = []
+        names_of_files += (filedialog.askopenfilenames(
+            initialdir=directory,
+            title="Select Image Files",
+            filetypes=(
+                (a, "*.png"),
+                (a, "*.jpeg"),
+                (a, "*.jpg*"),
+                (a, "*.gif"),
+                (a, "*.tiff"),
+                (a, "*.psd"),
+                (a, "*.eps"),
+                (a, "*.ai"),
+                (a, "*.indd"),
+                (a, "*.raw")
             )
         )
+        )
+        # try:
+        amount = len(names_of_files)
 
-        try:
-            self.background_uploaded_img = fit_image(Image.open(
-                str(names_of_files[0])), self.preview_frame, full=True)
-            self.background_uploaded_label = tk.Label(
-                self.preview_frame, image=self.background_uploaded_img)
-            self.background_uploaded_label.place(relheight=1, relwidth=1)
+        [width_divisor, height_divisor] = custom_screen.divide_grid(amount)
 
-        except:
-            self.preview_text.text, self.preview_text.font = \
-                "Failed to Upload/Preview Image(s)", \
-                "Courier",
-            int(68 * RATIO),
-            "bold"
+        width_portion = self.preview_frame.winfo_width() / width_divisor
+        height_portion = self.preview_frame.winfo_height() / height_divisor
+
+        self.image_buttons = {}
+
+        # goes by column
+        for j in range(height_divisor):
+            # row
+            for i in range(width_divisor):
+                self.image_buttons[i] = tk.Button(
+                    self.preview_frame)
+                self.image_buttons[i].place(relx=0+(1/width_divisor*i), rely=0+(1/height_divisor*j), relwidth=1/width_divisor,
+                                            relheight=1/height_divisor, anchor='nw')
+
+                self.current_image = fit_image(
+                    Image.open(names_of_files[i]), self.image_buttons[i], full=True)
+
+                self.image_buttons[i].configure(image=self.current_image)
+
+        # except:
+        #     self.preview_text.text, self.preview_text.font = \
+        #         "Failed to Upload Image(s)", \
+        #         "Courier",
+        #     int(68 * RATIO),
+        #     "bold"
+
+    def divide_grid(amount):
+        if (amount < 3):
+            return [amount, 1]
+        result = []
+        for i in range(1, int(amount ** 0.5) + 1):
+            div, mod = divmod(amount, i)
+            # ignore 1 and amount itself as factors
+            if mod == 0 and i != 1 and div != amount:
+                result.append(div)
+                result.append(i)
+            if len(result) == 0:  # if no factors then add 1
+                return custom_screen.divide_grid(amount+1)
+        return result[len(result)-2:]
 
     def trash_image_preview():
         pass
@@ -501,12 +526,12 @@ class custom_screen:
     def toggle_select_all():
         pass
 
-    def set_background_uploaded():
-        if win:
-            ctypes.windll.user32.SystemParametersInfoW(
-                20, 0, names_of_files, 0)
-        else:
-            app("Finder").desktop_picture.set(mactypes.File(names_of_files))
+    # def set_background_uploaded():
+    #     if win:
+    #         ctypes.windll.user32.SystemParametersInfoW(
+    #             20, 0, TODO put file here, 0)
+    #     else:
+    #         app("Finder").desktop_picture.set(mactypes.File(TODO put file here))
 
 
 class preset_screen:
