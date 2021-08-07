@@ -208,7 +208,7 @@ class main_screen:
             )
             if do_not_show == False:
 
-                explanation_reset_text = "This is a program written by Daniel and Stephen that will\nhelp you change your computer backgrounds! There are many\nfeatures and functions to help you. The cog will take you\nto a settings page, 'Upload Custom' allows you to use your\n own images, 'Browse Preset' allows you to use preset\n options, 'Search' allows you search for images online,\n'Manage Collections' is to manage the image colections\n you've made, and 'Schedule' will help you schedule\n your image rotation"
+                explanation_reset_text = "This is a program written by Daniel and Stephen that will\nhelp you change your computer backgrounds! There are many\nfeatures and functions to help you. The cog will take you\nto a settings page, 'Upload Custom' allows you to use your\n own images, 'Browse Preset' allows you to use preset\n options, 'Search' allows you to search for images online,\n'Manage Collections' is to manage the image colections\n you've made, and 'Schedule' will help you schedule\n your image rotation"
                 explanation_reset_font = ("Courier", int(14 * RATIO))
                 explanation_reset_command = main_screen.do_not_show_clicked()
                 self.explanation_reset_button_text = "Don't show again"
@@ -263,6 +263,33 @@ class main_screen:
         self.search_frame.place(
             relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7
         )
+
+        self.search_frame_title = tk.Frame(self.search_frame, bg="#e5efde")
+        self.search_frame_title.place(
+            relwidth=0.85, relheight=0.3, relx=0
+        )
+
+        self.search_title = tk.Label(
+            self.search_frame_title,
+            bg="#e5efde",
+            text="Search",
+            font=("Courier", int(30 * RATIO))
+        )
+        self.search_title.place(
+            relx=0.05, rely= 0.1
+        )
+
+        self.search_button = tk.Button(
+            self.search_frame,
+            bg="#e5efde",
+            bd=5,
+            command=lambda: main_screen.go_search_screen(self)
+        )
+        self.search_button.place(relwidth=0.15, relheight=1, relx=0.85)
+
+        self.search_pic = fit_image(Image.open(
+            "./images/search_icon.png"), self.search_button)
+        self.search_button.configure(image=self.search_pic)
 
         self.collections_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
         self.collections_frame.place(
