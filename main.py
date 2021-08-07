@@ -264,20 +264,13 @@ class main_screen:
             relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7
         )
 
-        self.search_frame_title = tk.Frame(self.search_frame, bg="#e5efde")
-        self.search_frame_title.place(
-            relwidth=0.85, relheight=0.3, relx=0
-        )
+        # self.search_frame_typing = tk.Frame(self.search_frame, bg="#e5efde")
+        # self.search_frame_typing.place(
+        #     relwidth=0.85, relheight=1, relx=0
+        # )
 
-        self.search_title = tk.Label(
-            self.search_frame_title,
-            bg="#e5efde",
-            text="Search",
-            font=("Courier", int(30 * RATIO))
-        )
-        self.search_title.place(
-            relx=0.05, rely= 0.1
-        )
+        self.search_entry = PlaceholderEntry(self.search_frame, "Search", '', font=("Courier", int(69 * RATIO)), justify="center")
+        self.search_entry.place(relwidth = 0.85, relheight=1, anchor="nw")
 
         self.search_button = tk.Button(
             self.search_frame,
