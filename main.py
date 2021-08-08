@@ -1,6 +1,7 @@
 import os
 import sys
 import ctypes
+import math
 
 import tkinter as tk
 from tkinter import ttk, filedialog
@@ -24,6 +25,8 @@ else:
 root = tk.Tk()
 root.withdraw()
 current_window = None
+
+names_of_files = []
 
 SCREEN_WIDTH, SCREEN_HEIGHT = root.winfo_screenwidth(), root.winfo_screenheight()
 
@@ -269,8 +272,9 @@ class main_screen:
         #     relwidth=0.85, relheight=1, relx=0
         # )
 
-        self.search_entry = PlaceholderEntry(self.search_frame, "Search", '', font=("Courier", int(69 * RATIO)), justify="center")
-        self.search_entry.place(relwidth = 0.85, relheight=1, anchor="nw")
+        self.search_entry = PlaceholderEntry(self.search_frame, "Search", '', font=(
+            "Courier", int(69 * RATIO)), justify="center")
+        self.search_entry.place(relwidth=0.85, relheight=1, anchor="nw")
 
         self.search_button = tk.Button(
             self.search_frame,
@@ -358,7 +362,7 @@ class settings_screen:
 
         self.theme_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
         self.theme_frame.place(
-            relx=0.5, rely=0.425, relwidth=0.95, relheight=0.15, anchor="n"
+            relx=0.5, rely=0.25, relwidth=0.95, relheight=0.15, anchor="n"
         )
 
         self.theme_title = tk.Label(
@@ -377,7 +381,17 @@ class settings_screen:
             relx=0.125, rely=0, relwidth=0.3, relheight=1, anchor="n"
         )
 
-        # add themes after in this frame to the right
+        # TODO add themes after in this frame to the right
+
+        self.first_theme_button = tk.Button(
+            self.master,
+            bd=5,
+            bg="#c4dc34"
+        )
+
+        self.first_theme_pic = fit_image(Image.open(
+            "./images/first_palette.png"), self.first_theme_button)
+        self.first_theme_button.configure(image=self.first_theme_pic)
 
 
 class custom_screen:
@@ -395,7 +409,7 @@ class custom_screen:
             ),
             bg="#e5efde",
             bd=5,
-            command=lambda: custom_screen.retrieve_file(self)
+            command=lambda: custom_screen.retrieve_file(self, names_of_files)
         )
         self.select_button.place(
             relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
@@ -464,17 +478,14 @@ class custom_screen:
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
 
-    def retrieve_file(self):
+    def retrieve_file(self, names_of_files):
         a = "compatible image files"
-
-        global names_of_files
 
         if win:
             directory = "/This PC"
         else:
             directory = "/Recents"
-
-        names_of_files = []
+        
         names_of_files += (filedialog.askopenfilenames(
             initialdir=directory,
             title="Select Image Files",
@@ -492,13 +503,16 @@ class custom_screen:
             )
         )
         )
-        # try:
+
+        # TODO try:
         amount = len(names_of_files)
 
-        [width_divisor, height_divisor] = custom_screen.divide_grid(amount)
+        width_divisor = math.floor(math.sqrt(amount))
+        height_divisor = math.ceil(amount / width_divisor)
 
-        width_portion = self.preview_frame.winfo_width() / width_divisor
-        height_portion = self.preview_frame.winfo_height() / height_divisor
+        #? useless variables
+        #width_divided = self.preview_frame.winfo_width() / width_divisor
+        #height_divided = self.preview_frame.winfo_height() / height_divisor
 
         self.image_buttons = {}
 
@@ -516,6 +530,7 @@ class custom_screen:
 
                 self.image_buttons[i].configure(image=self.current_image)
 
+        # TODO uncomment and implement once dynamic grid system working
         # except:
         #     self.preview_text.text, self.preview_text.font = \
         #         "Failed to Upload Image(s)", \
@@ -523,19 +538,7 @@ class custom_screen:
         #     int(68 * RATIO),
         #     "bold"
 
-    def divide_grid(amount):
-        if (amount < 3):
-            return [amount, 1]
-        result = []
-        for i in range(1, int(amount ** 0.5) + 1):
-            div, mod = divmod(amount, i)
-            # ignore 1 and amount itself as factors
-            if mod == 0 and i != 1 and div != amount:
-                result.append(div)
-                result.append(i)
-            if len(result) == 0:  # if no factors then add 1
-                return custom_screen.divide_grid(amount+1)
-        return result[len(result)-2:]
+    # ! if amount >= 3 then this algorithm doesn't work, gets stuck in never-ending lines 539-540
 
     def trash_image_preview():
         pass
