@@ -213,13 +213,11 @@ class main_screen:
 
                 explanation_reset_text = "This is a program written by Daniel and Stephen that will\nhelp you change your computer backgrounds! There are many\nfeatures and functions to help you. The cog will take you\nto a settings page, 'Upload Custom' allows you to use your\n own images, 'Browse Preset' allows you to use preset\n options, 'Search' allows you to search for images online,\n'Manage Collections' is to manage the image colections\n you've made, and 'Schedule' will help you schedule\n your image rotation"
                 explanation_reset_font = ("Courier", int(14 * RATIO))
-                explanation_reset_command = main_screen.do_not_show_clicked()
                 self.explanation_reset_button_text = "Don't show again"
 
             elif do_not_show == 'needs reset':
                 explanation_reset_text = "It seems the settings \nhave been edited and can \nno longer be read from."
                 explanation_reset_font = ("Courier", int(30 * RATIO))
-                explanation_reset_command = write_default_settings()
                 self.explanation_reset_button_text = 'Reset Settings'
 
             self.explantion_text = tk.Label(
@@ -238,7 +236,7 @@ class main_screen:
                 font=("Courier", int(30 * RATIO)),
                 bg="#e5efde",
                 bd=5,
-                command=lambda: explanation_reset_command
+                command=lambda: main_screen.do_not_show_clicked(do_not_show)
             )
             self.explanation_do_not_show_button.place(
                 relwidth=1, relheight=0.3, rely=0.7
@@ -344,10 +342,13 @@ class main_screen:
         self.master.destroy()
         main_screen(root)
 
-    def do_not_show_clicked():
-        with open("Settings.txt", 'w') as settings_file:
-            settings_data = "do_not_show: True"
-            settings_file.writelines(settings_data)
+    def do_not_show_clicked(do_not_show):
+        if do_not_show == False:
+            with open("Settings.txt", 'w') as settings_file:
+                settings_data = "do_not_show: True"
+                settings_file.writelines(settings_data)
+        else:
+            write_default_settings()
 
 
 class settings_screen:
