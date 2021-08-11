@@ -7,6 +7,15 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
 
+palette = {
+    "main background": "#66aff5",
+    "text button background": "#e5efde",
+    "primary button background": "#13ae4b",
+    "selection frame background": "#c4dc34",
+    "darker than primary button": "#0f893b",
+    "darker than text button": "#9cb19c",
+}
+
 # determining OS of user
 # ratio is to compensate for text size differential between Windows and macOS
 # every text attribute's font size should be preceded by int(RATIO * {font size})
@@ -16,6 +25,7 @@ if sys.platform == "win32":
     RATIO = 1
 elif sys.platform == "darwin":
     from appscript import app, mactypes
+
     win, mac = False, True
     RATIO = 1.375
 else:
@@ -45,16 +55,25 @@ def main():
 def fit_image(img, container, full=False):
     container.update()
     if full == True:
-        return ImageTk.PhotoImage(img.resize(
-            (container.winfo_width(), container.winfo_height()), Image.ANTIALIAS))
+        return ImageTk.PhotoImage(
+            img.resize(
+                (container.winfo_width(), container.winfo_height()), Image.ANTIALIAS
+            )
+        )
     else:
-        return ImageTk.PhotoImage(img.resize
-                                  ((int(container.winfo_width() * 0.9),
-                                    int(container.winfo_height() * 0.9)), Image.ANTIALIAS))
+        return ImageTk.PhotoImage(
+            img.resize(
+                (
+                    int(container.winfo_width() * 0.9),
+                    int(container.winfo_height() * 0.9),
+                ),
+                Image.ANTIALIAS,
+            )
+        )
 
 
 def write_default_settings():
-    with open("Settings.txt", 'w') as settings_file:
+    with open("Settings.txt", "w") as settings_file:
         settings_file.write("do_not_show: False")
 
 
@@ -107,7 +126,9 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
     current_window.resizable(width=False, height=False)
 
     if title != ("", 0):
-        self.title_frame = tk.Frame(current_window, bg="#13ae4b", bd=5)
+        self.title_frame = tk.Frame(
+            current_window, bg=palette["primary button background"], bd=5
+        )
         self.title_frame.place(
             relx=0.5, rely=0.025, relwidth=0.7, relheight=0.15, anchor="n"
         )
@@ -115,7 +136,7 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
         self.title_label = tk.Label(
             self.title_frame,
             text=f"{title[0]}",
-            font=("Courier", int(title[1] * RATIO))
+            font=("Courier", int(title[1] * RATIO)),
         )
         self.title_label.place(relwidth=1, relheight=1)
 
@@ -124,12 +145,11 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
             current_window,
             text="Back",
             font=("Courier", int(50 * RATIO)),
-            bg="#13ae4b",
+            bg=palette["primary button background"],
             bd=5,
-            command=lambda: main_screen.go_main_screen(self)
+            command=lambda: main_screen.go_main_screen(self),
         )
-        self.return_button.place(
-            relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
+        self.return_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
     # if the user kills the window via the window manager,
     # exit the application.
@@ -141,7 +161,7 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
 class main_screen:
     def __init__(self, master):
         self.master = create_window(
-            self, master, "", ("Background Revolution", 68), return_value=False
+            self, master, "", ("Background Revolution", 69), return_value=False
         )
 
         self.quit_button = tk.Button(
@@ -149,23 +169,24 @@ class main_screen:
             text="Quit",
             font=("Courier", int(50 * RATIO)),
             command=lambda: root.destroy(),
-            bg="#13ae4b",
-            bd=5
+            bg=palette["primary button background"],
+            bd=5,
         )
-        self.quit_button.place(
-            relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
+        self.quit_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
         self.settings_pic_button = tk.Button(
             self.master,
-            bg="#13ae4b",
+            bg=palette["primary button background"],
             bd=5,
-            command=lambda: main_screen.go_settings_screen(self)
+            command=lambda: main_screen.go_settings_screen(self),
         )
         self.settings_pic_button.place(
-            relx=0.875, rely=0.025, relheight=0.15, relwidth=0.1)
+            relx=0.875, rely=0.025, relheight=0.15, relwidth=0.1
+        )
 
-        self.settings_pic = fit_image(Image.open(
-            "./images/settings_icon.png"), self.settings_pic_button)
+        self.settings_pic = fit_image(
+            Image.open("./images/settings_icon.png"), self.settings_pic_button
+        )
         self.settings_pic_button.configure(image=self.settings_pic)
 
         with open("Settings.txt") as settings_file:
@@ -175,13 +196,17 @@ class main_screen:
                 do_not_show = False
             elif settings_data == "do_not_show: True":
                 do_not_show = True
-            elif settings_data == 'do_not_show: False':
+            elif settings_data == "do_not_show: False":
                 do_not_show = False
             else:
                 do_not_show = "needs reset"
 
-        self.upload_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
-        self.browse_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
+        self.upload_frame = tk.Frame(
+            self.master, bd=5, bg=palette["selection frame background"]
+        )
+        self.browse_frame = tk.Frame(
+            self.master, bd=5, bg=palette["selection frame background"]
+        )
 
         if do_not_show == True:
             self.upload_frame.place(
@@ -192,51 +217,48 @@ class main_screen:
                 relwidth=0.675, relheight=0.15, relx=0.025, rely=0.475
             )
         else:
-            self.upload_frame.place(
-                relwidth=0.3, relheight=0.15, relx=0.025, rely=0.25
-            )
+            self.upload_frame.place(relwidth=0.3, relheight=0.15, relx=0.025, rely=0.25)
 
             self.browse_frame.place(
                 relwidth=0.3, relheight=0.15, relx=0.025, rely=0.475
             )
 
-            self.explanation_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
+            self.explanation_frame = tk.Frame(
+                self.master, bd=5, bg=palette["selection frame background"]
+            )
             self.explanation_frame.place(
                 relwidth=0.35, relheight=0.375, relx=0.7, rely=0.25, anchor="ne"
             )
             self.explanation_title_frame = tk.Frame(
-                self.explanation_frame, bg="#e5efde")
-            self.explanation_title_frame.place(
-                relwidth=1, relheight=0.7
+                self.explanation_frame, bg=palette["text button background"]
             )
+            self.explanation_title_frame.place(relwidth=1, relheight=0.7)
             if do_not_show == False:
 
                 explanation_reset_text = "This is a program written by Daniel and Stephen that will\nhelp you change your computer backgrounds! There are many\nfeatures and functions to help you. The cog will take you\nto a settings page, 'Upload Custom' allows you to use your\n own images, 'Browse Preset' allows you to use preset\n options, 'Search' allows you to search for images online,\n'Manage Collections' is to manage the image colections\n you've made, and 'Schedule' will help you schedule\n your image rotation"
                 explanation_reset_font = ("Courier", int(14 * RATIO))
                 self.explanation_reset_button_text = "Don't show again"
 
-            elif do_not_show == 'needs reset':
+            elif do_not_show == "needs reset":
                 explanation_reset_text = "It seems the settings \nhave been edited and can \nno longer be read from."
                 explanation_reset_font = ("Courier", int(30 * RATIO))
-                self.explanation_reset_button_text = 'Reset Settings'
+                self.explanation_reset_button_text = "Reset Settings"
 
             self.explantion_text = tk.Label(
                 self.explanation_title_frame,
-                bg="#e5efde",
+                bg=palette["text button background"],
                 text=explanation_reset_text,
-                font=explanation_reset_font
+                font=explanation_reset_font,
             )
-            self.explantion_text.place(
-                rely=0.5, relx=0.5, anchor='center'
-            )
+            self.explantion_text.place(rely=0.5, relx=0.5, anchor="center")
             self.explanation_do_not_show_button = tk.Button(
                 self.explanation_frame,
                 text=self.explanation_reset_button_text,
                 anchor="center",
                 font=("Courier", int(30 * RATIO)),
-                bg="#e5efde",
+                bg=palette["text button background"],
                 bd=5,
-                command=lambda: main_screen.do_not_show_clicked(do_not_show)
+                command=lambda: main_screen.do_not_show_clicked(do_not_show),
             )
             self.explanation_do_not_show_button.place(
                 relwidth=1, relheight=0.3, rely=0.7
@@ -246,8 +268,8 @@ class main_screen:
             self.browse_frame,
             text="Browse Preset",
             font=("Courier", int(50 * RATIO)),
-            bg="#e5efde",
-            command=lambda: main_screen.go_preset_screen(self)
+            bg=palette["text button background"],
+            command=lambda: main_screen.go_preset_screen(self),
         )
         self.browse_button.place(relx=0, relheight=1, relwidth=1)
 
@@ -255,38 +277,41 @@ class main_screen:
             self.upload_frame,
             text="Upload Custom",
             font=("Courier", int(50 * RATIO)),
-            bg="#e5efde",
-            command=lambda: main_screen.go_custom_screen(self)
+            bg=palette["text button background"],
+            command=lambda: main_screen.go_custom_screen(self),
         )
         self.upload_button.place(relx=0, relheight=1, relwidth=1)
 
-        self.search_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
-        self.search_frame.place(
-            relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7
+        self.search_frame = tk.Frame(
+            self.master, bd=5, bg=palette["selection frame background"]
         )
+        self.search_frame.place(relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7)
 
-        # self.search_frame_typing = tk.Frame(self.search_frame, bg="#e5efde")
-        # self.search_frame_typing.place(
-        #     relwidth=0.85, relheight=1, relx=0
-        # )
-
-        self.search_entry = PlaceholderEntry(self.search_frame, "Search", '', font=(
-            "Courier", int(69 * RATIO)), justify="center")
+        self.search_entry = PlaceholderEntry(
+            self.search_frame,
+            "Search",
+            "",
+            font=("Courier", int(69 * RATIO)),
+            justify="center",
+        )
         self.search_entry.place(relwidth=0.85, relheight=1, anchor="nw")
 
         self.search_button = tk.Button(
             self.search_frame,
-            bg="#e5efde",
+            bg=palette["text button background"],
             bd=5,
-            command=lambda: main_screen.go_search_screen(self)
+            command=lambda: main_screen.go_search_screen(self),
         )
         self.search_button.place(relwidth=0.15, relheight=1, relx=0.85)
 
-        self.search_pic = fit_image(Image.open(
-            "./images/search_icon.png"), self.search_button)
+        self.search_pic = fit_image(
+            Image.open("./images/search_icon.png"), self.search_button
+        )
         self.search_button.configure(image=self.search_pic)
 
-        self.collections_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
+        self.collections_frame = tk.Frame(
+            self.master, bd=5, bg=palette["selection frame background"]
+        )
         self.collections_frame.place(
             relwidth=0.25, relheight=0.375, relx=0.975, rely=0.437, anchor="e"
         )
@@ -295,12 +320,14 @@ class main_screen:
             self.collections_frame,
             text="Manage\nCollections",
             font=("Courier", int(50 * RATIO)),
-            bg="#e5efde",
-            command=lambda: main_screen.go_manage_screen(self)
+            bg=palette["text button background"],
+            command=lambda: main_screen.go_manage_screen(self),
         )
         self.collections_button.place(relx=0, relheight=1, relwidth=1)
 
-        self.schedule_frame = tk.Frame(self.master, bd=5, bg="#c4dc34")
+        self.schedule_frame = tk.Frame(
+            self.master, bd=5, bg=palette["selection frame background"]
+        )
         self.schedule_frame.place(
             relwidth=0.25, relheight=0.2, relx=0.975, rely=0.7, anchor="ne"
         )
@@ -309,8 +336,8 @@ class main_screen:
             self.schedule_frame,
             text="Schedule",
             font=("Courier", int(50 * RATIO)),
-            bg="#e5efde",
-            command=lambda: main_screen.go_schedule_screen(self)
+            bg=palette["text button background"],
+            command=lambda: main_screen.go_schedule_screen(self),
         )
         self.schedule_button.place(relx=0, relheight=1, relwidth=1)
 
@@ -344,7 +371,7 @@ class main_screen:
 
     def do_not_show_clicked(do_not_show):
         if do_not_show == False:
-            with open("Settings.txt", 'w') as settings_file:
+            with open("Settings.txt", "w") as settings_file:
                 settings_data = "do_not_show: True"
                 settings_file.writelines(settings_data)
         else:
@@ -361,7 +388,9 @@ class settings_screen:
             return_value=True,
         )
 
-        self.theme_frame = tk.Frame(self.master, bg="#13ae4b", bd=5)
+        self.theme_frame = tk.Frame(
+            self.master, bg=palette["primary button background"], bd=5
+        )
         self.theme_frame.place(
             relx=0.5, rely=0.25, relwidth=0.95, relheight=0.15, anchor="n"
         )
@@ -369,13 +398,13 @@ class settings_screen:
         self.theme_title = tk.Label(
             self.theme_frame,
             text="Theme:",
-            bg="#13ae4b",
+            bg=palette["primary button background"],
             font=(
                 "Courier",
                 int(80 * RATIO),
                 "bold",
             ),
-            fg="#c4dc34",
+            fg=palette["selection frame background"],
             bd=5,
         )
         self.theme_title.place(
@@ -385,13 +414,12 @@ class settings_screen:
         # TODO add themes after in this frame to the right
 
         self.first_theme_button = tk.Button(
-            self.master,
-            bd=5,
-            bg="#c4dc34"
+            self.master, bd=5, bg=palette["selection frame background"]
         )
 
-        self.first_theme_pic = fit_image(Image.open(
-            "./images/first_palette.png"), self.first_theme_button)
+        self.first_theme_pic = fit_image(
+            Image.open("./images/first_palette.png"), self.first_theme_button
+        )
         self.first_theme_button.configure(image=self.first_theme_pic)
 
 
@@ -408,40 +436,39 @@ class custom_screen:
                 "Courier",
                 int(int(f"{'44' if win == True else '58'}") * RATIO),
             ),
-            bg="#e5efde",
+            bg=palette["text button background"],
             bd=5,
-            command=lambda: custom_screen.retrieve_file(self, names_of_files)
+            command=lambda: custom_screen.retrieve_file(self, names_of_files),
         )
-        self.select_button.place(
-            relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
+        self.select_button.place(relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
 
         # buttons in top right corner
         self.action_frame = tk.Frame(
-            self.master, bd=10, bg="#13ae4b"
+            self.master, bd=10, bg=palette["primary button background"]
         )
-        self.action_frame.place(
-            relwidth=0.175, relheight=0.15, rely=0.025, relx=0.8)
+        self.action_frame.place(relwidth=0.175, relheight=0.15, rely=0.025, relx=0.8)
 
         self.trashcan_pic_button = tk.Button(
             self.action_frame,
-            bg="#e5efde",
-            command=lambda: custom_screen.trash_image_preview()
+            bg=palette["text button background"],
+            command=lambda: custom_screen.trash_image_preview(),
         )
         self.trashcan_pic_button.place(relx=0, relheight=0.67, relwidth=0.5)
 
-        self.trashcan_pic = fit_image(Image.open(
-            "./images/trash.png"), self.trashcan_pic_button)
+        self.trashcan_pic = fit_image(
+            Image.open("./images/trash.png"), self.trashcan_pic_button
+        )
         self.trashcan_pic_button.configure(image=self.trashcan_pic)
 
         self.save_to_button = tk.Button(
             self.action_frame,
             text="Save To",
-            bg="#e5efde",
+            bg=palette["text button background"],
             font=(
                 "Courier",
                 int(20 * RATIO),
             ),
-            command=lambda: custom_screen.save_images_to()
+            command=lambda: custom_screen.save_images_to(),
         )
         self.save_to_button.place(relx=0.5, relheight=0.67, relwidth=0.5)
 
@@ -452,15 +479,17 @@ class custom_screen:
                 "Courier",
                 int(20 * RATIO),
             ),
-            bg="#e5efde",
-            command=lambda: custom_screen.toggle_select_all()
+            bg=palette["text button background"],
+            command=lambda: custom_screen.toggle_select_all(),
         )
-        self.toggle_select_button.place(
-            relx=0, rely=0.67, relheight=0.33, relwidth=1)
+        self.toggle_select_button.place(relx=0, rely=0.67, relheight=0.33, relwidth=1)
 
         # fitting the output
         self.preview_frame = tk.Frame(
-            self.master, highlightcolor="#13ae4b", bd=10, bg="#13ae4b"
+            self.master,
+            highlightcolor=palette["primary button background"],
+            bd=10,
+            bg=palette["primary button background"],
         )
         self.preview_frame.place(
             relx=0.5, rely=0.225, relwidth=0.95, relheight=0.7, anchor="n"
@@ -469,13 +498,13 @@ class custom_screen:
         self.preview_text = tk.Label(
             self.preview_frame,
             text="<Preview Your Images Here>",
-            bg="#13ae4b",
+            bg=palette["primary button background"],
             font=(
                 "Courier",
                 int(80 * RATIO),
                 "bold",
             ),
-            fg="#0f893b"
+            fg=palette["darker than primary button"],
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
 
@@ -486,8 +515,8 @@ class custom_screen:
             directory = "/This PC"
         else:
             directory = "/Recents"
-        
-        names_of_files += (filedialog.askopenfilenames(
+
+        names_of_files += filedialog.askopenfilenames(
             initialdir=directory,
             title="Select Image Files",
             filetypes=(
@@ -500,9 +529,8 @@ class custom_screen:
                 (a, "*.eps"),
                 (a, "*.ai"),
                 (a, "*.indd"),
-                (a, "*.raw")
-            )
-        )
+                (a, "*.raw"),
+            ),
         )
 
         # TODO try:
@@ -511,9 +539,9 @@ class custom_screen:
         width_divisor = math.floor(math.sqrt(amount))
         height_divisor = math.ceil(amount / width_divisor)
 
-        #? useless variables
-        #width_divided = self.preview_frame.winfo_width() / width_divisor
-        #height_divided = self.preview_frame.winfo_height() / height_divisor
+        # ? useless variables
+        # width_divided = self.preview_frame.winfo_width() / width_divisor
+        # height_divided = self.preview_frame.winfo_height() / height_divisor
 
         self.image_buttons = {}
 
@@ -521,13 +549,18 @@ class custom_screen:
         for j in range(height_divisor):
             # row
             for i in range(width_divisor):
-                self.image_buttons[i] = tk.Button(
-                    self.preview_frame)
-                self.image_buttons[i].place(relx=0+(1/width_divisor*i), rely=0+(1/height_divisor*j), relwidth=1/width_divisor,
-                                            relheight=1/height_divisor, anchor='nw')
+                self.image_buttons[i] = tk.Button(self.preview_frame)
+                self.image_buttons[i].place(
+                    relx=0 + (1 / width_divisor * i),
+                    rely=0 + (1 / height_divisor * j),
+                    relwidth=1 / width_divisor,
+                    relheight=1 / height_divisor,
+                    anchor="nw",
+                )
 
                 self.current_image = fit_image(
-                    Image.open(names_of_files[i]), self.image_buttons[i], full=True)
+                    Image.open(names_of_files[i]), self.image_buttons[i], full=True
+                )
 
                 self.image_buttons[i].configure(image=self.current_image)
 
@@ -536,7 +569,7 @@ class custom_screen:
         #     self.preview_text.text, self.preview_text.font = \
         #         "Failed to Upload Image(s)", \
         #         "Courier",
-        #     int(68 * RATIO),
+        #     int(69 * RATIO),
         #     "bold"
 
     # ! if amount >= 3 then this algorithm doesn't work, gets stuck in never-ending lines 539-540
@@ -567,9 +600,7 @@ class preset_screen:
 
 class search_screen:
     def __init__(self, master):
-        self.master = create_window(
-            self, master, " - Search", return_value=True
-        )
+        self.master = create_window(self, master, " - Search", return_value=True)
 
 
 class manage_screen:
