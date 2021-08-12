@@ -426,7 +426,7 @@ class settings_screen:
 class custom_screen:
     def __init__(self, master):
         self.master = create_window(
-            self, master, "- Custom Collections", return_value=True
+            self, master, " - Custom Collections", return_value=True
         )
 
         self.select_button = tk.Button(
@@ -468,7 +468,7 @@ class custom_screen:
                 "Courier",
                 int(20 * RATIO),
             ),
-            command=lambda: custom_screen.save_images_to(),
+            command=lambda: custom_screen.save_images_to(self, master),
         )
         self.save_to_button.place(relx=0.5, relheight=0.67, relwidth=0.5)
 
@@ -577,9 +577,12 @@ class custom_screen:
     def trash_image_preview():
         pass
 
-    def save_images_to():
-        pass
-
+    def save_images_to(self, master):
+        self.master.destroy()
+        self.master = create_window(
+            self, master, " - Save Collections", ("Which collection to save to?", 54), return_value=True
+        )
+        
     def toggle_select_all():
         pass
 
@@ -594,7 +597,7 @@ class custom_screen:
 class preset_screen:
     def __init__(self, master):
         self.master = create_window(
-            self, master, "- Preset Collections", return_value=True
+            self, master, " - Preset Collections", return_value=True
         )
 
 
