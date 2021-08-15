@@ -147,6 +147,7 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
             font=("Courier", int(50 * RATIO)),
             bg=palette["primary button background"],
             bd=5,
+            activebackground=palette["darker than primary button"],
             command=lambda: main_screen.go_main_screen(self),
         )
         self.return_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
@@ -161,7 +162,7 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
 class main_screen:
     def __init__(self, master):
         self.master = create_window(
-            self, master, "", ("Background Revolution", 69), return_value=False
+            self, master, "", ("Background Revolution", 68), return_value=False
         )
 
         self.quit_button = tk.Button(
@@ -291,7 +292,7 @@ class main_screen:
             self.search_frame,
             "Search",
             "",
-            font=("Courier", int(69 * RATIO)),
+            font=("Courier", int(68 * RATIO)),
             justify="center",
         )
         self.search_entry.place(relwidth=0.85, relheight=1, anchor="nw")
@@ -569,7 +570,7 @@ class custom_screen:
         #     self.preview_text.text, self.preview_text.font = \
         #         "Failed to Upload Image(s)", \
         #         "Courier",
-        #     int(69 * RATIO),
+        #     int(68 * RATIO),
         #     "bold"
 
     # ! if amount >= 3 then this algorithm doesn't work, gets stuck in never-ending lines 539-540
@@ -581,6 +582,40 @@ class custom_screen:
         self.master.destroy()
         self.master = create_window(
             self, master, " - Save Collections", ("Which collection to save to?", 54), return_value=True
+        )
+
+        self.return_custom_button = tk.Button(
+            self.master,
+            bg=palette["primary button background"],
+            bd=5,
+            activebackground=palette["darker than primary button"],
+            text="Back to\nCustom",
+            font=("Courier", int(28 * RATIO)),
+            command=lambda: main_screen.go_custom_screen(self)
+        )
+        self.return_custom_button.place(
+            relwidth=0.1, relheight=0.15, relx=0.975, rely=0.025, anchor="ne"
+        )
+
+        self.new_collection_frame = tk.Frame(
+            self.master,
+            bg=palette["selection frame background"],
+            bd=5
+        )
+        self.new_collection_frame.place(
+            relwidth=0.7, relheight=0.15, relx=0.15, rely=0.225
+        )
+
+        self.new_collection_button = tk.Button(
+            self.new_collection_frame,
+            bg=palette["text button background"],
+            activebackground=palette["darker than text button"],
+            text="New Collection +",
+            font=("Courier", int(54 * RATIO)),
+            #command=lambda:
+        )
+        self.new_collection_button.place(
+            relwidth=1, relheight=1, relx=0, rely=0
         )
         
     def toggle_select_all():
