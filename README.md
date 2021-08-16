@@ -6,7 +6,7 @@ This will be an application for users to customize their windows backgrounds by 
 
 ## How? 
 
-Either run from one of our releases or the most recent code from your own machine like so:
+Either download the executable/zip file from one of our releases or run the most recent code from your own machine like so:
 
 - Make sure you have Python 3.8+ installed and added to `PATH`
 - Clone the repo on a computer running either Windows 10 or MacOS
