@@ -7,34 +7,6 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
 
-palette = {
-    "main background": "#66aff5",
-    "text button background": "#e5efde",
-    "selection frame background": "#c4dc34",
-    "primary button background": "#13ae4b",
-    "darker than primary button": "#0f893b",
-    
-}
-
-# TODO add and test these color palettes once setting in place
-''' #355C7D
-#F8B195
-#F67280
-#C06C84
-#6C5B7B
-'''
-
-'''
-#445A67
-#B4C9C7
-#57838D
-#F3BFB3
-#CCADB2
-'''
-
-
-
-
 # determining OS of user
 # ratio is to compensate for text size differential between Windows and macOS
 # every text attribute's font size should be preceded by int(RATIO * {font size})
@@ -54,6 +26,42 @@ else:
 root = tk.Tk()
 root.withdraw()
 current_window = None
+
+palette = {
+    "main background": "#66aff5",
+    "text button background": "#e5efde",
+    "darker than text button": "#9cb19c",
+    "selection frame background": "#c4dc34",
+    "primary button background": "#13ae4b",
+    "darker than primary button": "#0f893b"
+}
+
+'''
+"#66aff5"
+"#e5efde"
+"#9cb19c"
+"#c4dc34"
+"#13ae4b"
+"#0f893b"
+'''
+# TODO add and test these 2 color palettes once setting in place
+''' 
+"#355c7d"
+"#f8b195"
+"#f89c8f"
+"#f67280"
+"#c06c84"
+"#6c5b7b"
+'''
+
+'''
+"#445a67"
+"#b4c9c7"
+"#57838d"
+"#84969c"
+"#f3bfb3"
+"#ccadb2"
+'''
 
 names_of_files = []
 
@@ -169,7 +177,8 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
             activebackground=palette["darker than primary button"],
             command=lambda: main_screen.go_main_screen(self),
         )
-        self.return_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
+        self.return_button.place(
+            relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
     # if the user kills the window via the window manager,
     # exit the application.
@@ -192,7 +201,8 @@ class main_screen:
             bg=palette["primary button background"],
             bd=5,
         )
-        self.quit_button.place(relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
+        self.quit_button.place(
+            relwidth=0.1, relheight=0.15, relx=0.025, rely=0.025)
 
         self.settings_pic_button = tk.Button(
             self.master,
@@ -220,7 +230,7 @@ class main_screen:
                 do_not_show = False
             else:
                 do_not_show = "needs reset"
-        
+
         self.upload_frame = tk.Frame(
             self.master, bd=5, bg=palette["selection frame background"]
         )
@@ -237,7 +247,8 @@ class main_screen:
                 relwidth=0.675, relheight=0.15, relx=0.025, rely=0.475
             )
         else:
-            self.upload_frame.place(relwidth=0.3, relheight=0.15, relx=0.025, rely=0.25)
+            self.upload_frame.place(
+                relwidth=0.3, relheight=0.15, relx=0.025, rely=0.25)
 
             self.browse_frame.place(
                 relwidth=0.3, relheight=0.15, relx=0.025, rely=0.475
@@ -305,7 +316,8 @@ class main_screen:
         self.search_frame = tk.Frame(
             self.master, bd=5, bg=palette["selection frame background"]
         )
-        self.search_frame.place(relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7)
+        self.search_frame.place(
+            relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7)
 
         self.search_entry = PlaceholderEntry(
             self.search_frame,
@@ -431,12 +443,14 @@ class settings_screen:
             relx=0.1125, rely=0, relwidth=0.225, relheight=1, anchor="n"
         )
 
-        # TODO make all buttons have black border like text buttons in main_screen
+        # TODO make all buttons have black border like text buttons in main_screen, 
+        # TODO couldn't do that by just adding a bd value or by changing bg value
 
         self.first_theme_button = tk.Button(
             self.theme_frame
         )
-        self.first_theme_button.place(relwidth=0.225, relheight=0.9, relx=0.25, rely=0.05)
+        self.first_theme_button.place(
+            relwidth=0.225, relheight=0.9, relx=0.25, rely=0.05)
 
         self.first_theme_pic = fit_image(
             Image.open("./images/first_palette.png"), self.first_theme_button, full=True
@@ -446,7 +460,8 @@ class settings_screen:
         self.second_theme_button = tk.Button(
             self.theme_frame
         )
-        self.second_theme_button.place(relwidth=0.225, relheight=0.9, relx=0.5, rely=0.05)
+        self.second_theme_button.place(
+            relwidth=0.225, relheight=0.9, relx=0.5, rely=0.05)
 
         self.second_theme_pic = fit_image(
             Image.open("./images/second_palette.png"), self.second_theme_button, full=True
@@ -456,7 +471,8 @@ class settings_screen:
         self.third_theme_button = tk.Button(
             self.theme_frame
         )
-        self.third_theme_button.place(relwidth=0.225, relheight=0.9, relx=0.75, rely=0.05)
+        self.third_theme_button.place(
+            relwidth=0.225, relheight=0.9, relx=0.75, rely=0.05)
 
         self.third_theme_pic = fit_image(
             Image.open("./images/third_palette.png"), self.third_theme_button, full=True
@@ -481,13 +497,15 @@ class custom_screen:
             bd=5,
             command=lambda: custom_screen.retrieve_file(self, names_of_files),
         )
-        self.select_button.place(relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
+        self.select_button.place(
+            relx=0.15, relheight=0.15, relwidth=0.625, rely=0.025)
 
         # buttons in top right corner
         self.action_frame = tk.Frame(
             self.master, bd=10, bg=palette["primary button background"]
         )
-        self.action_frame.place(relwidth=0.175, relheight=0.15, rely=0.025, relx=0.8)
+        self.action_frame.place(
+            relwidth=0.175, relheight=0.15, rely=0.025, relx=0.8)
 
         self.trashcan_pic_button = tk.Button(
             self.action_frame,
@@ -523,7 +541,8 @@ class custom_screen:
             bg=palette["text button background"],
             command=lambda: custom_screen.toggle_select_all(),
         )
-        self.toggle_select_button.place(relx=0, rely=0.67, relheight=0.33, relwidth=1)
+        self.toggle_select_button.place(
+            relx=0, rely=0.67, relheight=0.33, relwidth=1)
 
         # fitting the output
         self.preview_frame = tk.Frame(
@@ -613,8 +632,6 @@ class custom_screen:
         #     int(68 * RATIO),
         #     "bold"
 
-    # ! if amount >= 3 then this algorithm doesn't work, gets stuck in never-ending lines 539-540
-
     def trash_image_preview():
         pass
 
@@ -652,21 +669,21 @@ class custom_screen:
             activebackground=palette["darker than text button"],
             text="New Collection +",
             font=("Courier", int(54 * RATIO)),
-            #command=lambda:
+            # command=lambda:
         )
         self.new_collection_button.place(
             relwidth=1, relheight=1, relx=0, rely=0
         )
-        
+
     def toggle_select_all():
         pass
 
     # def set_background_uploaded():
     #     if win:
     #         ctypes.windll.user32.SystemParametersInfoW(
-    #             20, 0, TODO put file here, 0)
+    #             20, 0, put file here, 0)
     #     else:
-    #         app("Finder").desktop_picture.set(mactypes.File(TODO put file here))
+    #         app("Finder").desktop_picture.set(mactypes.File(put file here))
 
 
 class preset_screen:
@@ -678,7 +695,8 @@ class preset_screen:
 
 class search_screen:
     def __init__(self, master):
-        self.master = create_window(self, master, " - Search", return_value=True)
+        self.master = create_window(
+            self, master, " - Search", return_value=True)
 
 
 class manage_screen:
