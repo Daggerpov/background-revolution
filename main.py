@@ -10,11 +10,30 @@ from PIL import ImageTk, Image
 palette = {
     "main background": "#66aff5",
     "text button background": "#e5efde",
-    "primary button background": "#13ae4b",
     "selection frame background": "#c4dc34",
+    "primary button background": "#13ae4b",
     "darker than primary button": "#0f893b",
-    "darker than text button": "#9cb19c",
+    
 }
+
+# TODO add and test these color palettes once setting in place
+''' #355C7D
+#F8B195
+#F67280
+#C06C84
+#6C5B7B
+'''
+
+'''
+#445A67
+#B4C9C7
+#57838D
+#F3BFB3
+#CCADB2
+'''
+
+
+
 
 # determining OS of user
 # ratio is to compensate for text size differential between Windows and macOS
@@ -201,7 +220,7 @@ class main_screen:
                 do_not_show = False
             else:
                 do_not_show = "needs reset"
-
+        
         self.upload_frame = tk.Frame(
             self.master, bd=5, bg=palette["selection frame background"]
         )
@@ -390,7 +409,7 @@ class settings_screen:
         )
 
         self.theme_frame = tk.Frame(
-            self.master, bg=palette["primary button background"], bd=5
+            self.master, bg=palette["selection frame background"], bd=5
         )
         self.theme_frame.place(
             relx=0.5, rely=0.25, relwidth=0.95, relheight=0.15, anchor="n"
@@ -405,23 +424,44 @@ class settings_screen:
                 int(80 * RATIO),
                 "bold",
             ),
-            fg=palette["selection frame background"],
             bd=5,
+            anchor='center'
         )
         self.theme_title.place(
-            relx=0.125, rely=0, relwidth=0.3, relheight=1, anchor="n"
+            relx=0.1125, rely=0, relwidth=0.225, relheight=1, anchor="n"
         )
 
-        # TODO add themes after in this frame to the right
+        # TODO make all buttons have black border like text buttons in main_screen
 
         self.first_theme_button = tk.Button(
-            self.master, bd=5, bg=palette["selection frame background"]
+            self.theme_frame
         )
+        self.first_theme_button.place(relwidth=0.225, relheight=0.9, relx=0.25, rely=0.05)
 
         self.first_theme_pic = fit_image(
-            Image.open("./images/first_palette.png"), self.first_theme_button
+            Image.open("./images/first_palette.png"), self.first_theme_button, full=True
         )
         self.first_theme_button.configure(image=self.first_theme_pic)
+
+        self.second_theme_button = tk.Button(
+            self.theme_frame
+        )
+        self.second_theme_button.place(relwidth=0.225, relheight=0.9, relx=0.5, rely=0.05)
+
+        self.second_theme_pic = fit_image(
+            Image.open("./images/second_palette.png"), self.second_theme_button, full=True
+        )
+        self.second_theme_button.configure(image=self.second_theme_pic)
+
+        self.third_theme_button = tk.Button(
+            self.theme_frame
+        )
+        self.third_theme_button.place(relwidth=0.225, relheight=0.9, relx=0.75, rely=0.05)
+
+        self.third_theme_pic = fit_image(
+            Image.open("./images/third_palette.png"), self.third_theme_button, full=True
+        )
+        self.third_theme_button.configure(image=self.third_theme_pic)
 
 
 class custom_screen:
