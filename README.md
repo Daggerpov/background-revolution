@@ -1,4 +1,4 @@
-# Background Revolution (In Development, Alpha)
+# Background Revolution (In Development, Alpha Release)
 
 ## What?
 
@@ -13,3 +13,7 @@ Either download the executable/zip file from one of our releases or run the most
 - Open your terminal in the directory that the repo is in
 - Install the required Python modules by running the requirements.txt file as such: `pip install -r requirements.txt` (_doing this in a virtual environment is recommended_), bare in mind that some modules _aren't supposed to be installed on your machine (due to OS differences) so let the errors be_
 - Run the file using `python main.py` or another method of your choosing
+
+## Why? 
+
+_**This is meant as a personal open-source project that won't ever be commercialized.**_ Despite there already being an application very similar to ours, _Wallpaper Engine on Steam_, ours will bring a unique scheduling method, search by way of web scraping a Google Images API rather than community posts, and our collections system is different. We're not even looking at that application for any sort of inspiration, seeing as we had the idea before realizing its existence. 
