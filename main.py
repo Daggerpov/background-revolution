@@ -7,9 +7,11 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
 
+import defaults
+
 # determining OS of user
 # ratio is to compensate for text size differential between Windows and macOS
-# every text attribute's font size should be preceded by int(RATIO * {font size})
+# every text attribute's font size should be preceded by int(RATIO * [font size])
 
 if sys.platform == "win32":
     win, mac = True, False
@@ -27,54 +29,23 @@ root = tk.Tk()
 root.withdraw()
 current_window = None
 
-palette = {
-    "main background": "#66aff5",
-    "text button background": "#e5efde",
-    "darker than text button": "#9cb19c",
-    "selection frame background": "#c4dc34",
-    "primary button background": "#13ae4b",
-    "darker than primary button": "#0f893b"
-}
-
-'''
-"#66aff5"
-"#e5efde"
-"#9cb19c"
-"#c4dc34"
-"#13ae4b"
-"#0f893b"
-'''
-# TODO add and test these 2 color palettes once setting in place
-''' 
-"#355c7d"
-"#f8b195"
-"#f89c8f"
-"#f67280"
-"#c06c84"
-"#6c5b7b"
-'''
-
-'''
-"#445a67"
-"#b4c9c7"
-"#57838d"
-"#84969c"
-"#f3bfb3"
-"#ccadb2"
-'''
-
 names_of_files = []
 
 SCREEN_WIDTH, SCREEN_HEIGHT = root.winfo_screenwidth(), root.winfo_screenheight()
 
 RATIO *= SCREEN_WIDTH / 1920
 
+# checking if settings need to be written as defaults
+with open("Settings.txt") as settings_file:
+    settings_data = settings_file.readlines()
+    if settings_data == []:
+        do_not_show, themes = defaults.write_default_settings()
+        
+import colors
 
 def main():
-    # setting the current screen to start menu
-    # app = main_screen(root)
-
     main_screen(root)
+
     # overall GUI loop which will run constantly, accepting input and such
     root.mainloop()
 
@@ -97,11 +68,6 @@ def fit_image(img, container, full=False):
                 Image.ANTIALIAS,
             )
         )
-
-
-def write_default_settings():
-    with open("Settings.txt", "w") as settings_file:
-        settings_file.write("do_not_show: False")
 
 
 class PlaceholderEntry(ttk.Entry):
@@ -146,7 +112,7 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
     current_window.geometry(f"{SCREEN_WIDTH}x{SCREEN_HEIGHT}+0+0")
     current_window.title(f"Background Revolution{extra}")
     self.canvas = tk.Canvas(
-        current_window, width=SCREEN_WIDTH, height=SCREEN_HEIGHT, bg="#66AFF5"
+        current_window, width=SCREEN_WIDTH, height=SCREEN_HEIGHT, bg=colors.main_background
     )
     self.canvas.pack()
     current_window.config()
@@ -154,7 +120,7 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
 
     if title != ("", 0):
         self.title_frame = tk.Frame(
-            current_window, bg=palette["primary button background"], bd=5
+            current_window, bg=colors.primary_button_background, bd=5
         )
         self.title_frame.place(
             relx=0.5, rely=0.025, relwidth=0.7, relheight=0.15, anchor="n"
@@ -172,9 +138,9 @@ def create_window(self, master, extra="", title=("", 0), return_value=False):
             current_window,
             text="Back",
             font=("Courier", int(50 * RATIO)),
-            bg=palette["primary button background"],
+            bg=colors.primary_button_background,
             bd=5,
-            activebackground=palette["darker than primary button"],
+            activebackground=colors.darker_than_primary_button,
             command=lambda: main_screen.go_main_screen(self),
         )
         self.return_button.place(
@@ -198,7 +164,7 @@ class main_screen:
             text="Quit",
             font=("Courier", int(50 * RATIO)),
             command=lambda: root.destroy(),
-            bg=palette["primary button background"],
+            bg=colors.primary_button_background,
             bd=5,
         )
         self.quit_button.place(
@@ -206,7 +172,7 @@ class main_screen:
 
         self.settings_pic_button = tk.Button(
             self.master,
-            bg=palette["primary button background"],
+            bg=colors.primary_button_background,
             bd=5,
             command=lambda: main_screen.go_settings_screen(self),
         )
@@ -222,7 +188,7 @@ class main_screen:
         with open("Settings.txt") as settings_file:
             settings_data = settings_file.readlines()[0]
             if settings_data == []:
-                write_default_settings()
+                defaults.write_default_settings()
                 do_not_show = False
             elif settings_data == "do_not_show: True":
                 do_not_show = True
@@ -232,10 +198,10 @@ class main_screen:
                 do_not_show = "needs reset"
 
         self.upload_frame = tk.Frame(
-            self.master, bd=5, bg=palette["selection frame background"]
+            self.master, bd=5, bg=colors.selection_frame_background
         )
         self.browse_frame = tk.Frame(
-            self.master, bd=5, bg=palette["selection frame background"]
+            self.master, bd=5, bg=colors.selection_frame_background
         )
 
         if do_not_show == True:
@@ -255,13 +221,13 @@ class main_screen:
             )
 
             self.explanation_frame = tk.Frame(
-                self.master, bd=5, bg=palette["selection frame background"]
+                self.master, bd=5, bg=colors.selection_frame_background
             )
             self.explanation_frame.place(
                 relwidth=0.35, relheight=0.375, relx=0.7, rely=0.25, anchor="ne"
             )
             self.explanation_title_frame = tk.Frame(
-                self.explanation_frame, bg=palette["text button background"]
+                self.explanation_frame, bg=colors.text_button_background
             )
             self.explanation_title_frame.place(relwidth=1, relheight=0.7)
             if do_not_show == False:
@@ -277,7 +243,7 @@ class main_screen:
 
             self.explantion_text = tk.Label(
                 self.explanation_title_frame,
-                bg=palette["text button background"],
+                bg=colors.text_button_background,
                 text=explanation_reset_text,
                 font=explanation_reset_font,
             )
@@ -287,7 +253,7 @@ class main_screen:
                 text=self.explanation_reset_button_text,
                 anchor="center",
                 font=("Courier", int(30 * RATIO)),
-                bg=palette["text button background"],
+                bg=colors.text_button_background,
                 bd=5,
                 command=lambda: main_screen.do_not_show_clicked(do_not_show),
             )
@@ -299,7 +265,7 @@ class main_screen:
             self.browse_frame,
             text="Browse Preset",
             font=("Courier", int(50 * RATIO)),
-            bg=palette["text button background"],
+            bg=colors.text_button_background,
             command=lambda: main_screen.go_preset_screen(self),
         )
         self.browse_button.place(relx=0, relheight=1, relwidth=1)
@@ -308,13 +274,13 @@ class main_screen:
             self.upload_frame,
             text="Upload Custom",
             font=("Courier", int(50 * RATIO)),
-            bg=palette["text button background"],
+            bg=colors.text_button_background,
             command=lambda: main_screen.go_custom_screen(self),
         )
         self.upload_button.place(relx=0, relheight=1, relwidth=1)
 
         self.search_frame = tk.Frame(
-            self.master, bd=5, bg=palette["selection frame background"]
+            self.master, bd=5, bg=colors.selection_frame_background
         )
         self.search_frame.place(
             relwidth=0.675, relheight=0.2, relx=0.025, rely=0.7)
@@ -330,7 +296,7 @@ class main_screen:
 
         self.search_button = tk.Button(
             self.search_frame,
-            bg=palette["text button background"],
+            bg=colors.text_button_background,
             bd=5,
             command=lambda: main_screen.go_search_screen(self),
         )
@@ -342,7 +308,7 @@ class main_screen:
         self.search_button.configure(image=self.search_pic)
 
         self.collections_frame = tk.Frame(
-            self.master, bd=5, bg=palette["selection frame background"]
+            self.master, bd=5, bg=colors.selection_frame_background
         )
         self.collections_frame.place(
             relwidth=0.25, relheight=0.375, relx=0.975, rely=0.437, anchor="e"
@@ -352,13 +318,13 @@ class main_screen:
             self.collections_frame,
             text="Manage\nCollections",
             font=("Courier", int(50 * RATIO)),
-            bg=palette["text button background"],
+            bg=colors.text_button_background,
             command=lambda: main_screen.go_manage_screen(self),
         )
         self.collections_button.place(relx=0, relheight=1, relwidth=1)
 
         self.schedule_frame = tk.Frame(
-            self.master, bd=5, bg=palette["selection frame background"]
+            self.master, bd=5, bg=colors.selection_frame_background
         )
         self.schedule_frame.place(
             relwidth=0.25, relheight=0.2, relx=0.975, rely=0.7, anchor="ne"
@@ -368,7 +334,7 @@ class main_screen:
             self.schedule_frame,
             text="Schedule",
             font=("Courier", int(50 * RATIO)),
-            bg=palette["text button background"],
+            bg=colors.text_button_background,
             command=lambda: main_screen.go_schedule_screen(self),
         )
         self.schedule_button.place(relx=0, relheight=1, relwidth=1)
@@ -407,7 +373,7 @@ class main_screen:
                 settings_data = "do_not_show: True"
                 settings_file.writelines(settings_data)
         else:
-            write_default_settings()
+            defaults.write_default_settings()
 
 
 class settings_screen:
@@ -421,7 +387,7 @@ class settings_screen:
         )
 
         self.theme_frame = tk.Frame(
-            self.master, bg=palette["selection frame background"], bd=5
+            self.master, bg=colors.selection_frame_background, bd=5
         )
         self.theme_frame.place(
             relx=0.5, rely=0.25, relwidth=0.95, relheight=0.15, anchor="n"
@@ -430,7 +396,7 @@ class settings_screen:
         self.theme_title = tk.Label(
             self.theme_frame,
             text="Theme:",
-            bg=palette["primary button background"],
+            bg=colors.primary_button_background,
             font=(
                 "Courier",
                 int(80 * RATIO),
@@ -443,7 +409,7 @@ class settings_screen:
             relx=0.1125, rely=0, relwidth=0.225, relheight=1, anchor="n"
         )
 
-        # TODO make all buttons have black border like text buttons in main_screen, 
+        # TODO make all buttons have black border like text buttons in main_screen,
         # TODO couldn't do that by just adding a bd value or by changing bg value
 
         self.first_theme_button = tk.Button(
@@ -493,7 +459,7 @@ class custom_screen:
                 "Courier",
                 int(int(f"{'44' if win == True else '58'}") * RATIO),
             ),
-            bg=palette["text button background"],
+            bg=colors.text_button_background,
             bd=5,
             command=lambda: custom_screen.retrieve_file(self, names_of_files),
         )
@@ -502,14 +468,14 @@ class custom_screen:
 
         # buttons in top right corner
         self.action_frame = tk.Frame(
-            self.master, bd=10, bg=palette["primary button background"]
+            self.master, bd=10, bg=colors.primary_button_background
         )
         self.action_frame.place(
             relwidth=0.175, relheight=0.15, rely=0.025, relx=0.8)
 
         self.trashcan_pic_button = tk.Button(
             self.action_frame,
-            bg=palette["text button background"],
+            bg=colors.text_button_background,
             command=lambda: custom_screen.trash_image_preview(),
         )
         self.trashcan_pic_button.place(relx=0, relheight=0.67, relwidth=0.5)
@@ -522,7 +488,7 @@ class custom_screen:
         self.save_to_button = tk.Button(
             self.action_frame,
             text="Save To",
-            bg=palette["text button background"],
+            bg=colors.text_button_background,
             font=(
                 "Courier",
                 int(20 * RATIO),
@@ -538,7 +504,7 @@ class custom_screen:
                 "Courier",
                 int(20 * RATIO),
             ),
-            bg=palette["text button background"],
+            bg=colors.text_button_background,
             command=lambda: custom_screen.toggle_select_all(),
         )
         self.toggle_select_button.place(
@@ -547,9 +513,9 @@ class custom_screen:
         # fitting the output
         self.preview_frame = tk.Frame(
             self.master,
-            highlightcolor=palette["primary button background"],
+            highlightcolor=colors.primary_button_background,
             bd=10,
-            bg=palette["primary button background"],
+            bg=colors.primary_button_background,
         )
         self.preview_frame.place(
             relx=0.5, rely=0.225, relwidth=0.95, relheight=0.7, anchor="n"
@@ -558,13 +524,13 @@ class custom_screen:
         self.preview_text = tk.Label(
             self.preview_frame,
             text="<Preview Your Images Here>",
-            bg=palette["primary button background"],
+            bg=colors.primary_button_background,
             font=(
                 "Courier",
                 int(80 * RATIO),
                 "bold",
             ),
-            fg=palette["darker than primary button"],
+            fg=colors.darker_than_primary_button,
         )
         self.preview_text.place(relx=0.5, rely=0.5, anchor="center")
 
@@ -643,9 +609,9 @@ class custom_screen:
 
         self.return_custom_button = tk.Button(
             self.master,
-            bg=palette["primary button background"],
+            bg=colors.primary_button_background,
             bd=5,
-            activebackground=palette["darker than primary button"],
+            activebackground=colors.darker_than_primary_button,
             text="Back to\nCustom",
             font=("Courier", int(28 * RATIO)),
             command=lambda: main_screen.go_custom_screen(self)
@@ -656,7 +622,7 @@ class custom_screen:
 
         self.new_collection_frame = tk.Frame(
             self.master,
-            bg=palette["selection frame background"],
+            bg=colors.selection_frame_background,
             bd=5
         )
         self.new_collection_frame.place(
@@ -665,8 +631,8 @@ class custom_screen:
 
         self.new_collection_button = tk.Button(
             self.new_collection_frame,
-            bg=palette["text button background"],
-            activebackground=palette["darker than text button"],
+            bg=colors.text_button_background,
+            activebackground=colors.darker_than_text_button,
             text="New Collection +",
             font=("Courier", int(54 * RATIO)),
             # command=lambda:
