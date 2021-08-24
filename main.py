@@ -660,7 +660,7 @@ class custom_screen:
             bd=5
         )
         self.new_collection_frame.place(
-            relwidth=0.7, relheight=0.15, relx=0.15, rely=0.225
+            relwidth=0.95, relheight=0.15, relx=0.025, rely=0.225
         )
 
         self.new_collection_button = tk.Button(
@@ -673,6 +673,23 @@ class custom_screen:
         )
         self.new_collection_button.place(
             relwidth=1, relheight=1, relx=0, rely=0
+        )
+
+        self.collection_frame = tk.Frame(
+            self.master,
+            bg=palette["selection frame background"],
+            bd=5
+        )
+        self.collection_frame.place(
+            relwidth=0.95, relheight=0.55, relx=0.025, rely=0.4
+        )
+        self.collection_scroll=tk.Scrollbar(
+            self.collection_frame,
+            bg=palette["text button background"],
+            bd=2,
+        )
+        self.collection_scroll.place(
+            relheight=1, relwidth=0.01, relx=1, rely=0, anchor="ne"
         )
 
     def toggle_select_all():
