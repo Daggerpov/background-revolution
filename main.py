@@ -36,19 +36,12 @@ SCREEN_WIDTH, SCREEN_HEIGHT = root.winfo_screenwidth(), root.winfo_screenheight(
 RATIO *= SCREEN_WIDTH / 1920
 
 # checking if settings need to be written as defaults
-with open("Settings.txt") as settings_file:
-    settings_data = settings_file.readlines()
-    if settings_data == []:
-        global do_not_show, themes
-        do_not_show, themes = defaults.write_default_settings()
 
 settings_file = open("settings.txt", "r").readlines()
 if settings_file == []:
     defaults.write_default_settings
-
-settings_data.close()
-
-#TODO need to turn this block above into global block
+global do_not_show, theme, color_palettes
+settings_file.close()
 
 def main():
     with open("settings.json") as settings:
