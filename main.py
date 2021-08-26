@@ -638,7 +638,11 @@ class custom_screen:
     def save_images_to(self, master):
         self.master.destroy()
         self.master = create_window(
-            self, master, " - Save Collections", ("Which collection to save to?", 54), return_value=True
+            self,
+            master,
+            " - Save Collections",
+            ("Which collection to save to?", 54),
+            return_value=True,
         )
 
         self.return_custom_button = tk.Button(
