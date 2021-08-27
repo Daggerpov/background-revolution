@@ -114,3 +114,4 @@ dmypy.json
 .pyre/
 .vscode/settings.json
 .DS_Store
+settings.json
