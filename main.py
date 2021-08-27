@@ -55,7 +55,7 @@ def main():
             color_palette = settings["color_palettes"][2]
         else:
             global do_not_show, themes
-            do_not_show, themes = defaults.write_default_settings()
+            do_not_show, themes = write_default_settings()
 
     main_screen(root)
 
@@ -202,7 +202,7 @@ class main_screen:
         with open("Settings.txt") as settings_file:
             settings_data = settings_file.readlines()[0]
             if settings_data == []:
-                defaults.write_default_settings()
+                write_default_settings()
                 do_not_show = False
             elif settings_data == "do_not_show: True":
                 do_not_show = True
@@ -390,7 +390,7 @@ class main_screen:
             with open("settings.json", "w") as settings_file:
                 json.dump(settings_data, settings_file)
         else:
-            defaults.write_default_settings()
+            write_default_settings()
 
 class settings_screen:
     def __init__(self, master):
@@ -428,7 +428,7 @@ class settings_screen:
         # TODO make all buttons have black border like text buttons in main_screen,
         # TODO couldn't do that by just adding a bd value or by changing bg value
 
-        self.first_theme_button = tk.Button(self.theme_frame)
+        self.first_theme_button = tk.Button(self.theme_frame, command=lambda:settings_screen.select_theme(1))
         self.first_theme_button.place(
             relwidth=0.225, relheight=0.9, relx=0.25, rely=0.05
         )
@@ -438,7 +438,7 @@ class settings_screen:
         )
         self.first_theme_button.configure(image=self.first_theme_pic)
 
-        self.second_theme_button = tk.Button(self.theme_frame)
+        self.second_theme_button = tk.Button(self.theme_frame, command=lambda:settings_screen.select_theme(2))
         self.second_theme_button.place(
             relwidth=0.225, relheight=0.9, relx=0.5, rely=0.05
         )
@@ -450,7 +450,7 @@ class settings_screen:
         )
         self.second_theme_button.configure(image=self.second_theme_pic)
 
-        self.third_theme_button = tk.Button(self.theme_frame)
+        self.third_theme_button = tk.Button(self.theme_frame, command=lambda:settings_screen.select_theme(3))
         self.third_theme_button.place(
             relwidth=0.225, relheight=0.9, relx=0.75, rely=0.05
         )
@@ -460,7 +460,7 @@ class settings_screen:
         )
         self.third_theme_button.configure(image=self.third_theme_pic)
 
-    def choose_theme(theme_number):
+    def select_theme(theme_number):
         #? not tested
         with open("settings.json", "r") as settings_file:
             settings_data = json.load(settings_file)
@@ -472,7 +472,6 @@ class settings_screen:
 
         with open("settings.json", "w") as settings_file:
             json.dump(settings_data, settings_file)
-
 
 class custom_screen:
     def __init__(self, master):
