@@ -1,9 +1,9 @@
 {
     "do_not_show": "False",
     "themes": {
-        "first_theme": "True",
-        "second_theme": "False",
-        "third_theme": "False"
+        "1": "False",
+        "2": "True",
+        "3": "False"
     },
     "color_palettes": [
         {

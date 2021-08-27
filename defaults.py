@@ -2,44 +2,42 @@ import json
 
 
 def write_default_settings():
-    print("afsdfsdf")
     with open("settings.json", "w") as settings_file:
-        print("asd;flkj")
         json.dump(
-{
-    "do_not_show": "False",
-    "themes": {
-        "first_theme": "True",
-        "second_theme": "False",
-        "third_theme": "False"
-    },
-    "color_palettes": [
-        {
-            "main_background": "#66aff5",
-            "text_button_background": "#e5efde",
-            "darker_than_text_button": "#9cb19c",
-            "selection_frame_background": "#c4dc34",
-            "primary_button_background": "#13ae4b",
-            "darker_than_primary_button": "#0f893b"
-        },
-        {
-            "main_background": "#355c7d",
-            "text_button_background": "#f8b195",
-            "darker_than_text_button": "#f89c8f",
-            "selection_frame_background": "#f67280",
-            "primary_button_background": "#c06c84",
-            "darker_than_primary_button": "#6c5b7b",
-        },
-        {
-            "main_background": "#445a67",
-            "text_button_background": "#b4c9c7",
-            "darker_than_text_button": "#57838d",
-            "selection_frame_background": "#84969c",
-            "primary_button_background": "#f3bfb3",
-            "darker_than_primary_button": "#ccadb2",
-            
-        }
-    ]
-},
-            settings_file, indent=4
+            {
+                "do_not_show": "False",
+                "themes": {
+                    "1": "True",
+                    "2": "False",
+                    "3": "False",
+                },
+                "color_palettes": [
+                    {
+                        "main_background": "#66aff5",
+                        "text_button_background": "#e5efde",
+                        "darker_than_text_button": "#9cb19c",
+                        "selection_frame_background": "#c4dc34",
+                        "primary_button_background": "#13ae4b",
+                        "darker_than_primary_button": "#0f893b",
+                    },
+                    {
+                        "main_background": "#355c7d",
+                        "text_button_background": "#f8b195",
+                        "darker_than_text_button": "#f89c8f",
+                        "selection_frame_background": "#f67280",
+                        "primary_button_background": "#c06c84",
+                        "darker_than_primary_button": "#6c5b7b",
+                    },
+                    {
+                        "main_background": "#445a67",
+                        "text_button_background": "#b4c9c7",
+                        "darker_than_text_button": "#57838d",
+                        "selection_frame_background": "#84969c",
+                        "primary_button_background": "#f3bfb3",
+                        "darker_than_primary_button": "#ccadb2",
+                    },
+                ],
+            },
+            settings_file,
+            indent=4,
         )

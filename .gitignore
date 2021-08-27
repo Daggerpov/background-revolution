@@ -115,3 +115,4 @@ dmypy.json
 .vscode/settings.json
 Settings.txt
 .DS_Store
+settings.json
