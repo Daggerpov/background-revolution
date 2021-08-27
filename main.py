@@ -41,9 +41,7 @@ with open("settings.json") as settings_file:
     try: settings_data = json.load(settings_file)
     except: write_default_settings()
 
-#TODO need to implement theme selection
-
-def main():
+def check_colors():
     with open("settings.json") as settings:
         settings = json.load(settings)
         global color_palette
@@ -55,6 +53,11 @@ def main():
             color_palette = settings["color_palettes"][2]
         else:
             write_default_settings()
+
+#TODO need to implement theme selection
+
+def main():
+    check_colors()
 
     main_screen(root)
 
@@ -373,15 +376,15 @@ class main_screen:
 
     def do_not_show_clicked(do_not_show):
         #? not tested yet
-        if do_not_show == False:
+        if do_not_show == "False":
             with open("settings.json", "r") as settings_file:
                 settings_data = json.load(settings_file)
 
             settings_data["do_not_show"] = "True"
 
             with open("settings.json", "w") as settings_file:
-                json.dump(settings_data, settings_file)
-        else:
+                json.dump(settings_data, settings_file, indent=4)
+        if do_not_show == "needs reset":
             write_default_settings()
 
 class settings_screen:
@@ -453,7 +456,6 @@ class settings_screen:
         self.third_theme_button.configure(image=self.third_theme_pic)
 
     def select_theme(theme_number:str):
-        #? not tested
         with open("settings.json", "r") as settings_file:
             settings_data = json.load(settings_file)
 
@@ -464,6 +466,8 @@ class settings_screen:
 
         with open("settings.json", "w") as settings_file:
             json.dump(settings_data, settings_file, indent=4)
+        
+        check_colors()
 
 class custom_screen:
     def __init__(self, master):
