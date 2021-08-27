@@ -8,7 +8,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
 
-import defaults
+from defaults import write_default_settings
 
 # determining OS of user
 # ratio is to compensate for text size differential between Windows and macOS
@@ -37,11 +37,11 @@ RATIO *= SCREEN_WIDTH / 1920
 
 # checking if settings need to be written as defaults
 
-settings_file = open("settings.txt", "r").readlines()
-if settings_file == []:
-    defaults.write_default_settings
-global do_not_show, theme, color_palettes
-settings_file.close()
+with open("settings.json") as settings_file:
+    try: settings_data = json.load(settings_file)
+    except: write_default_settings()
+
+#TODO need to implement theme selection
 
 def main():
     with open("settings.json") as settings:
@@ -380,6 +380,7 @@ class main_screen:
         main_screen(root)
 
     def do_not_show_clicked(do_not_show):
+        #? not tested yet
         if do_not_show == False:
             with open("settings.json", "r") as settings_file:
                 settings_data = json.load(settings_file)
@@ -458,6 +459,19 @@ class settings_screen:
             Image.open("./images/third_palette.png"), self.third_theme_button, full=True
         )
         self.third_theme_button.configure(image=self.third_theme_pic)
+
+    def choose_theme(theme_number):
+        #? not tested
+        with open("settings.json", "r") as settings_file:
+            settings_data = json.load(settings_file)
+
+        for theme in range(0, len(settings_data["themes"])):
+            settings_data["themes"][theme] = "False"
+
+        settings_data["themes"][theme_number-1] = "True"
+
+        with open("settings.json", "w") as settings_file:
+            json.dump(settings_data, settings_file)
 
 
 class custom_screen:
