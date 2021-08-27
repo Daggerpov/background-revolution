@@ -654,7 +654,7 @@ class custom_screen:
         self.new_collection_button = tk.Button(
             self.new_collection_frame,
             bg=color_palette["text_button_background"],
-            activebackground=colors.darker_than_text_button,
+            activebackground=color_palette['darker_than_text_button'],
             text="New Collection +",
             font=("Courier", int(54 * RATIO)),
             # command=lambda:
@@ -663,7 +663,7 @@ class custom_screen:
 
         self.collection_frame = tk.Frame(
             self.master,
-            bg=palette["selection frame background"],
+            bg=color_palette["selection_frame_background"],
             bd=5
         )
         self.collection_frame.place(
@@ -671,7 +671,7 @@ class custom_screen:
         )
         self.collection_scroll=tk.Scrollbar(
             self.collection_frame,
-            bg=palette["text button background"],
+            bg=color_palette["text_button_background"],
             bd=2,
         )
         self.collection_scroll.place(
@@ -688,6 +688,10 @@ class custom_screen:
     #     else:
     #         app("Finder").desktop_picture.set(mactypes.File(put file here))
 
+
+class save_image_screen():
+    #TODO put your function here to make window
+    pass
 
 class preset_screen:
     def __init__(self, master):
