@@ -6,6 +6,7 @@ import json
 
 import tkinter as tk
 from tkinter import ttk, filedialog
+from tkinter.constants import YES
 from PIL import ImageTk, Image
 
 from defaults import write_default_settings
@@ -514,7 +515,7 @@ class custom_screen:
                 "Courier",
                 int(20 * RATIO),
             ),
-            command=lambda: custom_screen.save_images_to(self, master),
+            command=lambda: custom_screen.save_images_to(self)
         )
         self.save_to_button.place(relx=0.5, relheight=0.67, relwidth=0.5)
 
@@ -621,8 +622,23 @@ class custom_screen:
     def trash_image_preview():
         pass
 
-    def save_images_to(self, master):
+    def save_images_to(self):
         self.master.destroy()
+        save_image_screen(root)
+
+    def toggle_select_all():
+        pass
+
+    # def set_background_uploaded():
+    #     if win:
+    #         ctypes.windll.user32.SystemParametersInfoW(
+    #             20, 0, put file here, 0)
+    #     else:
+    #         app("Finder").desktop_picture.set(mactypes.File(put file here))
+
+
+class save_image_screen():
+    def __init__(self, master):
         self.master = create_window(
             self,
             master,
@@ -661,37 +677,35 @@ class custom_screen:
         )
         self.new_collection_button.place(relwidth=1, relheight=1, relx=0, rely=0)
 
-        self.collection_frame = tk.Frame(
-            self.master,
-            bg=color_palette["selection_frame_background"],
-            bd=5
-        )
-        self.collection_frame.place(
-            relwidth=0.95, relheight=0.55, relx=0.025, rely=0.4
-        )
+        self.collections_canvas = tk.Canvas(self.master, bg=color_palette["selection_frame_background"], bd=5)
+        self.collections_canvas.place(relwidth=0.95, relheight=0.55, relx=0.025, rely=0.4)
+
         self.collection_scroll=tk.Scrollbar(
-            self.collection_frame,
+            self.collections_canvas,
+            orient="vertical",
             bg=color_palette["text_button_background"],
             bd=2,
+            command=self.collections_canvas.yview
         )
-        self.collection_scroll.place(
-            relheight=1, relwidth=0.01, relx=1, rely=0, anchor="ne"
+        self.collection_scroll.pack(
+            side="right",
+            fill="y"
         )
 
-    def toggle_select_all():
-        pass
+        self.collections_canvas.configure(yscrollcommand=self.collection_scroll.set)
+        self.collections_canvas.bind('<Configure>', lambda e: self.collections_canvas.configure(scrollregion = self.collections_canvas.bbox('all')))
 
-    # def set_background_uploaded():
-    #     if win:
-    #         ctypes.windll.user32.SystemParametersInfoW(
-    #             20, 0, put file here, 0)
-    #     else:
-    #         app("Finder").desktop_picture.set(mactypes.File(put file here))
+        self.collection_frame = tk.Frame(self.collections_canvas, bg=color_palette["selection_frame_background"])
 
+        #This is filler just to demonstrate the functionality of the scrollbar, we can change it to any objects we want
+        for x in range(50):
+            tk.Button(
+                self.collection_frame,
+                text=f"Button number {x}",
+                font=("Courier", int(36 * RATIO))
+            ).pack()
 
-class save_image_screen():
-    #TODO put your function here to make window
-    pass
+        self.collections_canvas.create_window((0,0), window=self.collection_frame, anchor="nw")
 
 class preset_screen:
     def __init__(self, master):
