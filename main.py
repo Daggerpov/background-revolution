@@ -590,26 +590,34 @@ class custom_screen:
         # width_divided = self.preview_frame.winfo_width() / width_divisor
         # height_divided = self.preview_frame.winfo_height() / height_divisor
 
-        self.image_buttons = {}
+        self.image_buttons, self.images = {}, {}
+        count = 0
 
         # goes by column
-        for j in range(height_divisor):
+        for y in range(height_divisor):
             # row
-            for i in range(width_divisor):
-                self.image_buttons[i] = tk.Button(self.preview_frame)
-                self.image_buttons[i].place(
-                    relx=0 + (1 / width_divisor * i),
-                    rely=0 + (1 / height_divisor * j),
+            for x in range(width_divisor):
+                self.image_buttons[count] = tk.Button(self.preview_frame)
+                self.image_buttons[count].place(
+                    relx=0 + (1 / width_divisor * x),
+                    rely=0 + (1 / height_divisor * y),
                     relwidth=1 / width_divisor,
                     relheight=1 / height_divisor,
                     anchor="nw",
                 )
 
-                self.current_image = fit_image(
-                    Image.open(names_of_files[i]), self.image_buttons[i], full=True
+                self.images[count] = fit_image(
+                    Image.open(names_of_files[count]), self.image_buttons[count], full=True
                 )
 
-                self.image_buttons[i].configure(image=self.current_image)
+                self.image_buttons[count].configure(image=self.images[count])
+                count += 1
+        
+        print(self.image_buttons)
+
+
+        # for count, image in self.image_buttons.items():
+            
 
         # TODO uncomment and implement once dynamic grid system working
         # except:
