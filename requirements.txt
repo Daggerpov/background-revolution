@@ -1,2 +1,2 @@
 appscript==1.1.2 #if on mac, but error is fine otherwise
-Pillow==8.3.1
+Pillow==8.3.2
